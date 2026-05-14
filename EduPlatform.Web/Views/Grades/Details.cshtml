@@ -1,0 +1,24 @@
+@model Grade
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>@Model.Name</h1>
+<p>@Model.Description</p>
+
+<section class="card">
+    <h2>Subjects</h2>
+    @if (!Model.Subjects.Any())
+    {
+        <p class="muted">No subjects added to this grade yet.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var subject in Model.Subjects)
+            {
+                <li>@subject.Name</li>
+            }
+        </ul>
+    }
+</section>

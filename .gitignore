@@ -1,0 +1,35 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.log
+
+# Environment secrets
+.env
+appsettings.Development.json
+appsettings.Production.json
+
+# Docker
+docker-compose.override.yml
+
+# Build artifacts
+publish/
+*.nupkg
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Visual Studio / build output cleanup
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+*.zip

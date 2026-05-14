@@ -1,0 +1,37 @@
+@model Course
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h1>@Model.Title</h1>
+<p class="muted">@Model.Level · @Model.Language · @Model.Status · @Model.ApprovalStatus</p>
+<p>@Model.Description</p>
+
+<section class="card">
+    <h2>Sections</h2>
+    @if (!Model.Sections.Any())
+    {
+        <p class="muted">No sections yet.</p>
+    }
+    else
+    {
+        <ol>
+            @foreach (var sec in Model.Sections.OrderBy(s => s.Order))
+            {
+                <li>
+                    <strong>@sec.Title</strong>
+
+                    @if (sec.Lessons.Any())
+                    {
+                        <ul>
+                            @foreach (var lesson in sec.Lessons.OrderBy(l => l.Order))
+                            {
+                                <li>@lesson.Title (@lesson.ContentType)</li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+        </ol>
+    }
+</section>

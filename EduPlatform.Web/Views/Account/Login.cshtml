@@ -1,0 +1,25 @@
+@model LoginVM
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+<form asp-action="Login" method="post" class="form-card">
+    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+    <div asp-validation-summary="ModelOnly" class="validation"></div>
+
+    <label asp-for="Email"></label>
+    <input asp-for="Email" />
+    <span asp-validation-for="Email" class="validation"></span>
+
+    <label asp-for="Password"></label>
+    <input asp-for="Password" />
+    <span asp-validation-for="Password" class="validation"></span>
+
+    <label class="checkbox">
+        <input asp-for="RememberMe" /> Remember me
+    </label>
+
+    <button type="submit" class="btn">Login</button>
+</form>

@@ -1,0 +1,26 @@
+@model DashboardVM
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Admin Dashboard</h1>
+<p class="muted">High-level school LMS overview.</p>
+
+<section class="grid cards">
+    <article class="card stat">
+        <span>Grades</span>
+        <strong>@Model.GradesCount</strong>
+    </article>
+    <article class="card stat">
+        <span>Subjects</span>
+        <strong>@Model.SubjectsCount</strong>
+    </article>
+    <article class="card stat">
+        <span>Courses</span>
+        <strong>@Model.CoursesCount</strong>
+    </article>
+    <article class="card stat">
+        <span>Enrollments</span>
+        <strong>@Model.EnrollmentsCount</strong>
+    </article>
+</section>

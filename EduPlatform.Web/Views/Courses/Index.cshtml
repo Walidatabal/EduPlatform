@@ -1,0 +1,26 @@
+@model IReadOnlyList<Course>
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<h1>Courses</h1>
+<p class="muted">Published courses available in the school LMS.</p>
+
+@if (!Model.Any())
+{
+    <div class="empty">No published courses yet.</div>
+}
+else
+{
+    <section class="grid cards">
+        @foreach (var course in Model)
+        {
+            <article class="card">
+                <h3>@course.Title</h3>
+                <p>@course.Description</p>
+                <p class="muted">@course.Level · @course.Language · @course.Price.ToString("C")</p>
+                <a class="btn small" asp-action="Details" asp-route-id="@course.Id">Details</a>
+            </article>
+        }
+    </section>
+}

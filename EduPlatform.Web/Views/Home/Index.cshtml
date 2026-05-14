@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero">
+    <div>
+        <p class="eyebrow">Enterprise School LMS</p>
+        <h1>Grade-based learning platform for schools, teachers, students, and parents.</h1>
+        <p>
+            This MVC project is a clean presentation layer built on top of the existing Domain,
+            Application, and Infrastructure layers.
+        </p>
+        <div class="actions">
+            <a class="btn" asp-controller="Courses" asp-action="Index">Browse Courses</a>
+            <a class="btn secondary" asp-controller="Grades" asp-action="Index">View Grades</a>
+        </div>
+    </div>
+</section>
+
+<section class="grid cards">
+    <article class="card">
+        <h3>School Structure</h3>
+        <p>Grade → Subject → Course → Section → Lesson.</p>
+    </article>
+    <article class="card">
+        <h3>Live Courses</h3>
+        <p>Prepared for scheduled sessions, links, and recordings.</p>
+    </article>
+    <article class="card">
+        <h3>Enterprise Ready</h3>
+        <p>Separate API and MVC Web projects with shared clean architecture.</p>
+    </article>
+</section>

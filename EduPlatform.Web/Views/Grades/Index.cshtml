@@ -1,0 +1,25 @@
+@model IReadOnlyList<Grade>
+@{
+    ViewData["Title"] = "Grades";
+}
+
+<h1>Grades</h1>
+<p class="muted">School grade structure.</p>
+
+@if (!Model.Any())
+{
+    <div class="empty">No grades yet.</div>
+}
+else
+{
+    <section class="grid cards">
+        @foreach (var grade in Model)
+        {
+            <article class="card">
+                <h3>@grade.Name</h3>
+                <p>@grade.Description</p>
+                <a class="btn small" asp-action="Details" asp-route-id="@grade.Id">View subjects</a>
+            </article>
+        }
+    </section>
+}

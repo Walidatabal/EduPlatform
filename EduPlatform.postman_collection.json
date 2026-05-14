@@ -1,0 +1,162 @@
+{
+  "info": {
+    "name": "EduPlatform API",
+    "_postman_id": "eduplatform-v1",
+    "description": "Complete API collection for EduPlatform — Udemy/Uula style learning marketplace",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8080", "type": "string" },
+    { "key": "token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register (Student)",
+          "request": {
+            "method": "POST", "url": "{{base_url}}/api/auth/register",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"Ahmed Al-Rashid\",\n  \"email\": \"student@test.com\",\n  \"password\": \"Student@123\",\n  \"role\": \"Student\"\n}" }
+          }
+        },
+        {
+          "name": "Register (Teacher)",
+          "request": {
+            "method": "POST", "url": "{{base_url}}/api/auth/register",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"Sara Al-Mutairi\",\n  \"email\": \"teacher@test.com\",\n  \"password\": \"Teacher@123\",\n  \"role\": \"PendingTeacher\"\n}" }
+          }
+        },
+        {
+          "name": "Login (Admin)",
+          "event": [{"listen": "test", "script": {"exec": ["var json = pm.response.json();", "if(json.accessToken) pm.collectionVariables.set('token', json.accessToken);"]}}],
+          "request": {
+            "method": "POST", "url": "{{base_url}}/api/auth/login",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@eduplatform.com\",\n  \"password\": \"Admin@123456\"\n}" }
+          }
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET", "url": "{{base_url}}/api/auth/me",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Grades",
+      "item": [
+        { "name": "Get All Grades", "request": { "method": "GET", "url": "{{base_url}}/api/grades" } },
+        { "name": "Get Grade by ID", "request": { "method": "GET", "url": "{{base_url}}/api/grades/1" } },
+        {
+          "name": "Create Grade (Admin)",
+          "request": {
+            "method": "POST", "url": "{{base_url}}/api/grades",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Grade 10\",\n  \"description\": \"Tenth grade curriculum\"\n}" }
+          }
+        },
+        {
+          "name": "Update Grade (Admin)",
+          "request": {
+            "method": "PUT", "url": "{{base_url}}/api/grades/1",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Grade 10 Updated\",\n  \"description\": \"Updated description\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Grade (Admin)",
+          "request": {
+            "method": "DELETE", "url": "{{base_url}}/api/grades/1",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subjects",
+      "item": [
+        { "name": "Get All Subjects", "request": { "method": "GET", "url": "{{base_url}}/api/subjects" } },
+        { "name": "Get Subjects by Grade", "request": { "method": "GET", "url": "{{base_url}}/api/subjects?gradeId=1" } },
+        {
+          "name": "Create Subject (Admin)",
+          "request": {
+            "method": "POST", "url": "{{base_url}}/api/subjects",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Mathematics\",\n  \"description\": \"Math for Grade 10\",\n  \"gradeId\": 1\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "item": [
+        { "name": "Browse Courses", "request": { "method": "GET", "url": "{{base_url}}/api/courses" } },
+        { "name": "Filter Courses", "request": { "method": "GET", "url": "{{base_url}}/api/courses?gradeId=1&isFree=true&search=math" } },
+        { "name": "Get Course Detail", "request": { "method": "GET", "url": "{{base_url}}/api/courses/1" } },
+        {
+          "name": "Create Course (Teacher)",
+          "request": {
+            "method": "POST", "url": "{{base_url}}/api/courses",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Algebra Fundamentals\",\n  \"description\": \"Master algebra from scratch\",\n  \"price\": 0,\n  \"subjectId\": 1\n}" }
+          }
+        },
+        {
+          "name": "Submit for Review (Teacher)",
+          "request": {
+            "method": "POST", "url": "{{base_url}}/api/courses/1/submit",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}]
+          }
+        },
+        {
+          "name": "Approve Course (Admin)",
+          "request": {
+            "method": "POST", "url": "{{base_url}}/api/courses/1/review",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": { "mode": "raw", "raw": "{\n  \"approve\": true,\n  \"reason\": null\n}" }
+          }
+        },
+        {
+          "name": "Reject Course (Admin)",
+          "request": {
+            "method": "POST", "url": "{{base_url}}/api/courses/1/review",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": { "mode": "raw", "raw": "{\n  \"approve\": false,\n  \"reason\": \"Content needs improvement\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enrollments",
+      "item": [
+        {
+          "name": "Enroll in Course (Student)",
+          "request": {
+            "method": "POST", "url": "{{base_url}}/api/enrollments",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": { "mode": "raw", "raw": "{\n  \"courseId\": 1\n}" }
+          }
+        },
+        {
+          "name": "My Enrollments",
+          "request": {
+            "method": "GET", "url": "{{base_url}}/api/enrollments/my",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}]
+          }
+        },
+        {
+          "name": "Check Enrollment",
+          "request": {
+            "method": "GET", "url": "{{base_url}}/api/enrollments/check/1",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}]
+          }
+        }
+      ]
+    }
+  ]
+}

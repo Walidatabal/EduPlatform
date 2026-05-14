@@ -1,0 +1,171 @@
+2026-05-14 11:40:54.864 +03:00 [INF] Applying database migrations. Attempt 1/10
+2026-05-14 11:40:56.316 +03:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2026-05-14 11:40:56.354 +03:00 [ERR] An exception occurred while iterating over the results of a query for context type 'EduPlatform.Infrastructure.Data.AppDbContext'.
+System.InvalidCastException: Unable to cast object of type 'System.String' to type 'System.Int32'.
+   at Microsoft.Data.SqlClient.SqlBuffer.get_Int32()
+   at Microsoft.Data.SqlClient.SqlDataReader.GetInt32(Int32 i)
+   at lambda_method174(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+System.InvalidCastException: Unable to cast object of type 'System.String' to type 'System.Int32'.
+   at Microsoft.Data.SqlClient.SqlBuffer.get_Int32()
+   at Microsoft.Data.SqlClient.SqlDataReader.GetInt32(Int32 i)
+   at lambda_method174(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2026-05-14 12:21:40.303 +03:00 [INF] Applying database migrations. Attempt 1/10
+2026-05-14 12:21:44.197 +03:00 [ERR] Failed executing DbCommand (110ms) [Parameters=[@p0='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = DateTime2), @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime2), @p7='?' (Size = 4000), @p8='?' (Size = 450), @p9='?' (DbType = DateTime2), @p10='?' (Size = 4000), @p11='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p12='?' (DbType = Int32), @p13='?' (DbType = DateTime2), @p14='?' (Size = 4000), @p15='?' (DbType = DateTime2), @p16='?' (DbType = Boolean), @p17='?' (DbType = DateTime2), @p18='?' (Size = 4000), @p19='?' (Size = 450), @p20='?' (DbType = DateTime2), @p21='?' (Size = 4000), @p22='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p23='?' (DbType = Int32), @p24='?' (DbType = DateTime2), @p25='?' (Size = 4000), @p26='?' (DbType = DateTime2), @p27='?' (DbType = Boolean), @p28='?' (DbType = DateTime2), @p29='?' (Size = 4000), @p30='?' (Size = 450), @p31='?' (DbType = DateTime2), @p32='?' (Size = 4000), @p33='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p34='?' (DbType = Int32), @p35='?' (DbType = DateTime2), @p36='?' (Size = 4000), @p37='?' (DbType = DateTime2), @p38='?' (DbType = Boolean), @p39='?' (DbType = DateTime2), @p40='?' (Size = 4000), @p41='?' (Size = 450), @p42='?' (DbType = DateTime2), @p43='?' (Size = 4000), @p44='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p45='?' (DbType = Int32), @p46='?' (DbType = DateTime2), @p47='?' (Size = 4000), @p48='?' (DbType = DateTime2), @p49='?' (DbType = Boolean), @p50='?' (DbType = DateTime2), @p51='?' (Size = 4000), @p52='?' (Size = 450), @p53='?' (DbType = DateTime2), @p54='?' (Size = 4000), @p55='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p56='?' (DbType = Int32), @p57='?' (DbType = DateTime2), @p58='?' (Size = 4000), @p59='?' (DbType = DateTime2), @p60='?' (DbType = Boolean), @p61='?' (DbType = DateTime2), @p62='?' (Size = 4000), @p63='?' (Size = 450), @p64='?' (DbType = DateTime2), @p65='?' (Size = 4000), @p66='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p67='?' (DbType = Int32), @p68='?' (DbType = DateTime2), @p69='?' (Size = 4000), @p70='?' (DbType = DateTime2), @p71='?' (DbType = Boolean), @p72='?' (DbType = DateTime2), @p73='?' (Size = 4000), @p74='?' (Size = 450), @p75='?' (DbType = DateTime2), @p76='?' (Size = 4000), @p77='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p78='?' (DbType = Int32), @p79='?' (DbType = DateTime2), @p80='?' (Size = 4000), @p81='?' (DbType = DateTime2), @p82='?' (DbType = Boolean), @p83='?' (DbType = DateTime2), @p84='?' (Size = 4000), @p85='?' (Size = 450), @p86='?' (DbType = DateTime2), @p87='?' (Size = 4000), @p88='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p89='?' (DbType = Int32), @p90='?' (DbType = DateTime2), @p91='?' (Size = 4000), @p92='?' (DbType = DateTime2), @p93='?' (DbType = Boolean), @p94='?' (DbType = DateTime2), @p95='?' (Size = 4000), @p96='?' (Size = 450), @p97='?' (DbType = DateTime2), @p98='?' (Size = 4000), @p99='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p100='?' (DbType = Int32), @p101='?' (DbType = DateTime2), @p102='?' (Size = 4000), @p103='?' (DbType = DateTime2), @p104='?' (DbType = Boolean), @p105='?' (DbType = DateTime2), @p106='?' (Size = 4000), @p107='?' (Size = 450), @p108='?' (DbType = DateTime2), @p109='?' (Size = 4000), @p110='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p111='?' (DbType = Int32), @p112='?' (DbType = DateTime2), @p113='?' (Size = 4000), @p114='?' (DbType = DateTime2), @p115='?' (DbType = Boolean), @p116='?' (DbType = DateTime2), @p117='?' (Size = 4000), @p118='?' (Size = 450), @p119='?' (DbType = DateTime2), @p120='?' (Size = 4000), @p121='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p122='?' (DbType = Int32), @p123='?' (DbType = DateTime2), @p124='?' (Size = 4000), @p125='?' (DbType = DateTime2), @p126='?' (DbType = Boolean), @p127='?' (DbType = DateTime2), @p128='?' (Size = 4000), @p129='?' (Size = 450), @p130='?' (DbType = DateTime2), @p131='?' (Size = 4000), @p132='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p133='?' (DbType = Int32), @p134='?' (DbType = DateTime2), @p135='?' (Size = 4000), @p136='?' (DbType = DateTime2), @p137='?' (DbType = Boolean), @p138='?' (DbType = DateTime2), @p139='?' (Size = 4000), @p140='?' (Size = 450), @p141='?' (DbType = DateTime2), @p142='?' (Size = 4000), @p143='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p144='?' (DbType = Int32), @p145='?' (DbType = DateTime2), @p146='?' (Size = 4000), @p147='?' (DbType = DateTime2), @p148='?' (DbType = Boolean), @p149='?' (DbType = DateTime2), @p150='?' (Size = 4000), @p151='?' (Size = 450), @p152='?' (DbType = DateTime2), @p153='?' (Size = 4000), @p154='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p155='?' (DbType = Int32), @p156='?' (DbType = DateTime2), @p157='?' (Size = 4000), @p158='?' (DbType = DateTime2), @p159='?' (DbType = Boolean), @p160='?' (DbType = DateTime2), @p161='?' (Size = 4000), @p162='?' (Size = 450), @p163='?' (DbType = DateTime2), @p164='?' (Size = 4000), @p165='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p166='?' (DbType = Int32), @p167='?' (DbType = DateTime2), @p168='?' (Size = 4000), @p169='?' (DbType = DateTime2), @p170='?' (DbType = Boolean), @p171='?' (DbType = DateTime2), @p172='?' (Size = 4000), @p173='?' (Size = 450), @p174='?' (DbType = DateTime2), @p175='?' (Size = 4000), @p176='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p177='?' (DbType = Int32), @p178='?' (DbType = DateTime2), @p179='?' (Size = 4000), @p180='?' (DbType = DateTime2), @p181='?' (DbType = Boolean), @p182='?' (DbType = DateTime2), @p183='?' (Size = 4000), @p184='?' (Size = 450), @p185='?' (DbType = DateTime2), @p186='?' (Size = 4000), @p187='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p188='?' (DbType = Int32), @p189='?' (DbType = DateTime2), @p190='?' (Size = 4000), @p191='?' (DbType = DateTime2), @p192='?' (DbType = Boolean), @p193='?' (DbType = DateTime2), @p194='?' (Size = 4000), @p195='?' (Size = 450), @p196='?' (DbType = DateTime2), @p197='?' (Size = 4000), @p198='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p199='?' (DbType = Int32), @p200='?' (DbType = DateTime2), @p201='?' (Size = 4000), @p202='?' (DbType = DateTime2), @p203='?' (DbType = Boolean), @p204='?' (DbType = DateTime2), @p205='?' (Size = 4000), @p206='?' (Size = 450), @p207='?' (DbType = DateTime2), @p208='?' (Size = 4000), @p209='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p210='?' (DbType = Int32), @p211='?' (DbType = DateTime2), @p212='?' (Size = 4000), @p213='?' (DbType = DateTime2), @p214='?' (DbType = Boolean), @p215='?' (DbType = DateTime2), @p216='?' (Size = 4000), @p217='?' (Size = 450), @p218='?' (DbType = DateTime2), @p219='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+MERGE [Enrollments] USING (
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, 0),
+(@p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, 1),
+(@p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, 2),
+(@p33, @p34, @p35, @p36, @p37, @p38, @p39, @p40, @p41, @p42, @p43, 3),
+(@p44, @p45, @p46, @p47, @p48, @p49, @p50, @p51, @p52, @p53, @p54, 4),
+(@p55, @p56, @p57, @p58, @p59, @p60, @p61, @p62, @p63, @p64, @p65, 5),
+(@p66, @p67, @p68, @p69, @p70, @p71, @p72, @p73, @p74, @p75, @p76, 6),
+(@p77, @p78, @p79, @p80, @p81, @p82, @p83, @p84, @p85, @p86, @p87, 7),
+(@p88, @p89, @p90, @p91, @p92, @p93, @p94, @p95, @p96, @p97, @p98, 8),
+(@p99, @p100, @p101, @p102, @p103, @p104, @p105, @p106, @p107, @p108, @p109, 9),
+(@p110, @p111, @p112, @p113, @p114, @p115, @p116, @p117, @p118, @p119, @p120, 10),
+(@p121, @p122, @p123, @p124, @p125, @p126, @p127, @p128, @p129, @p130, @p131, 11),
+(@p132, @p133, @p134, @p135, @p136, @p137, @p138, @p139, @p140, @p141, @p142, 12),
+(@p143, @p144, @p145, @p146, @p147, @p148, @p149, @p150, @p151, @p152, @p153, 13),
+(@p154, @p155, @p156, @p157, @p158, @p159, @p160, @p161, @p162, @p163, @p164, 14),
+(@p165, @p166, @p167, @p168, @p169, @p170, @p171, @p172, @p173, @p174, @p175, 15),
+(@p176, @p177, @p178, @p179, @p180, @p181, @p182, @p183, @p184, @p185, @p186, 16),
+(@p187, @p188, @p189, @p190, @p191, @p192, @p193, @p194, @p195, @p196, @p197, 17),
+(@p198, @p199, @p200, @p201, @p202, @p203, @p204, @p205, @p206, @p207, @p208, 18),
+(@p209, @p210, @p211, @p212, @p213, @p214, @p215, @p216, @p217, @p218, @p219, 19)) AS i ([AmountPaid], [CourseId], [CreatedAt], [CreatedBy], [DateTime], [IsDeleted], [PaidAt], [Status], [StudentId], [UpdatedAt], [UpdatedBy], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([AmountPaid], [CourseId], [CreatedAt], [CreatedBy], [DateTime], [IsDeleted], [PaidAt], [Status], [StudentId], [UpdatedAt], [UpdatedBy])
+VALUES (i.[AmountPaid], i.[CourseId], i.[CreatedAt], i.[CreatedBy], i.[DateTime], i.[IsDeleted], i.[PaidAt], i.[Status], i.[StudentId], i.[UpdatedAt], i.[UpdatedBy])
+OUTPUT INSERTED.[Id], i._Position;
+2026-05-14 12:21:44.214 +03:00 [ERR] An exception occurred in the database while saving changes for context type 'EduPlatform.Infrastructure.Data.AppDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'DateTime'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__211_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+ClientConnectionId:fc964ab6-04d9-44fa-8770-740ac6445fd8
+Error Number:207,State:1,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'DateTime'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__211_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+ClientConnectionId:fc964ab6-04d9-44fa-8770-740ac6445fd8
+Error Number:207,State:1,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-05-14 12:24:44.125 +03:00 [INF] Applying database migrations. Attempt 1/10
+2026-05-14 12:24:46.688 +03:00 [ERR] Failed executing DbCommand (13ms) [Parameters=[@p0='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = DateTime2), @p5='?' (DbType = Boolean), @p6='?' (DbType = DateTime2), @p7='?' (Size = 4000), @p8='?' (Size = 450), @p9='?' (DbType = DateTime2), @p10='?' (Size = 4000), @p11='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p12='?' (DbType = Int32), @p13='?' (DbType = DateTime2), @p14='?' (Size = 4000), @p15='?' (DbType = DateTime2), @p16='?' (DbType = Boolean), @p17='?' (DbType = DateTime2), @p18='?' (Size = 4000), @p19='?' (Size = 450), @p20='?' (DbType = DateTime2), @p21='?' (Size = 4000), @p22='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p23='?' (DbType = Int32), @p24='?' (DbType = DateTime2), @p25='?' (Size = 4000), @p26='?' (DbType = DateTime2), @p27='?' (DbType = Boolean), @p28='?' (DbType = DateTime2), @p29='?' (Size = 4000), @p30='?' (Size = 450), @p31='?' (DbType = DateTime2), @p32='?' (Size = 4000), @p33='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p34='?' (DbType = Int32), @p35='?' (DbType = DateTime2), @p36='?' (Size = 4000), @p37='?' (DbType = DateTime2), @p38='?' (DbType = Boolean), @p39='?' (DbType = DateTime2), @p40='?' (Size = 4000), @p41='?' (Size = 450), @p42='?' (DbType = DateTime2), @p43='?' (Size = 4000), @p44='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p45='?' (DbType = Int32), @p46='?' (DbType = DateTime2), @p47='?' (Size = 4000), @p48='?' (DbType = DateTime2), @p49='?' (DbType = Boolean), @p50='?' (DbType = DateTime2), @p51='?' (Size = 4000), @p52='?' (Size = 450), @p53='?' (DbType = DateTime2), @p54='?' (Size = 4000), @p55='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p56='?' (DbType = Int32), @p57='?' (DbType = DateTime2), @p58='?' (Size = 4000), @p59='?' (DbType = DateTime2), @p60='?' (DbType = Boolean), @p61='?' (DbType = DateTime2), @p62='?' (Size = 4000), @p63='?' (Size = 450), @p64='?' (DbType = DateTime2), @p65='?' (Size = 4000), @p66='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p67='?' (DbType = Int32), @p68='?' (DbType = DateTime2), @p69='?' (Size = 4000), @p70='?' (DbType = DateTime2), @p71='?' (DbType = Boolean), @p72='?' (DbType = DateTime2), @p73='?' (Size = 4000), @p74='?' (Size = 450), @p75='?' (DbType = DateTime2), @p76='?' (Size = 4000), @p77='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p78='?' (DbType = Int32), @p79='?' (DbType = DateTime2), @p80='?' (Size = 4000), @p81='?' (DbType = DateTime2), @p82='?' (DbType = Boolean), @p83='?' (DbType = DateTime2), @p84='?' (Size = 4000), @p85='?' (Size = 450), @p86='?' (DbType = DateTime2), @p87='?' (Size = 4000), @p88='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p89='?' (DbType = Int32), @p90='?' (DbType = DateTime2), @p91='?' (Size = 4000), @p92='?' (DbType = DateTime2), @p93='?' (DbType = Boolean), @p94='?' (DbType = DateTime2), @p95='?' (Size = 4000), @p96='?' (Size = 450), @p97='?' (DbType = DateTime2), @p98='?' (Size = 4000), @p99='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p100='?' (DbType = Int32), @p101='?' (DbType = DateTime2), @p102='?' (Size = 4000), @p103='?' (DbType = DateTime2), @p104='?' (DbType = Boolean), @p105='?' (DbType = DateTime2), @p106='?' (Size = 4000), @p107='?' (Size = 450), @p108='?' (DbType = DateTime2), @p109='?' (Size = 4000), @p110='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p111='?' (DbType = Int32), @p112='?' (DbType = DateTime2), @p113='?' (Size = 4000), @p114='?' (DbType = DateTime2), @p115='?' (DbType = Boolean), @p116='?' (DbType = DateTime2), @p117='?' (Size = 4000), @p118='?' (Size = 450), @p119='?' (DbType = DateTime2), @p120='?' (Size = 4000), @p121='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p122='?' (DbType = Int32), @p123='?' (DbType = DateTime2), @p124='?' (Size = 4000), @p125='?' (DbType = DateTime2), @p126='?' (DbType = Boolean), @p127='?' (DbType = DateTime2), @p128='?' (Size = 4000), @p129='?' (Size = 450), @p130='?' (DbType = DateTime2), @p131='?' (Size = 4000), @p132='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p133='?' (DbType = Int32), @p134='?' (DbType = DateTime2), @p135='?' (Size = 4000), @p136='?' (DbType = DateTime2), @p137='?' (DbType = Boolean), @p138='?' (DbType = DateTime2), @p139='?' (Size = 4000), @p140='?' (Size = 450), @p141='?' (DbType = DateTime2), @p142='?' (Size = 4000), @p143='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p144='?' (DbType = Int32), @p145='?' (DbType = DateTime2), @p146='?' (Size = 4000), @p147='?' (DbType = DateTime2), @p148='?' (DbType = Boolean), @p149='?' (DbType = DateTime2), @p150='?' (Size = 4000), @p151='?' (Size = 450), @p152='?' (DbType = DateTime2), @p153='?' (Size = 4000), @p154='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p155='?' (DbType = Int32), @p156='?' (DbType = DateTime2), @p157='?' (Size = 4000), @p158='?' (DbType = DateTime2), @p159='?' (DbType = Boolean), @p160='?' (DbType = DateTime2), @p161='?' (Size = 4000), @p162='?' (Size = 450), @p163='?' (DbType = DateTime2), @p164='?' (Size = 4000), @p165='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p166='?' (DbType = Int32), @p167='?' (DbType = DateTime2), @p168='?' (Size = 4000), @p169='?' (DbType = DateTime2), @p170='?' (DbType = Boolean), @p171='?' (DbType = DateTime2), @p172='?' (Size = 4000), @p173='?' (Size = 450), @p174='?' (DbType = DateTime2), @p175='?' (Size = 4000), @p176='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p177='?' (DbType = Int32), @p178='?' (DbType = DateTime2), @p179='?' (Size = 4000), @p180='?' (DbType = DateTime2), @p181='?' (DbType = Boolean), @p182='?' (DbType = DateTime2), @p183='?' (Size = 4000), @p184='?' (Size = 450), @p185='?' (DbType = DateTime2), @p186='?' (Size = 4000), @p187='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p188='?' (DbType = Int32), @p189='?' (DbType = DateTime2), @p190='?' (Size = 4000), @p191='?' (DbType = DateTime2), @p192='?' (DbType = Boolean), @p193='?' (DbType = DateTime2), @p194='?' (Size = 4000), @p195='?' (Size = 450), @p196='?' (DbType = DateTime2), @p197='?' (Size = 4000), @p198='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p199='?' (DbType = Int32), @p200='?' (DbType = DateTime2), @p201='?' (Size = 4000), @p202='?' (DbType = DateTime2), @p203='?' (DbType = Boolean), @p204='?' (DbType = DateTime2), @p205='?' (Size = 4000), @p206='?' (Size = 450), @p207='?' (DbType = DateTime2), @p208='?' (Size = 4000), @p209='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p210='?' (DbType = Int32), @p211='?' (DbType = DateTime2), @p212='?' (Size = 4000), @p213='?' (DbType = DateTime2), @p214='?' (DbType = Boolean), @p215='?' (DbType = DateTime2), @p216='?' (Size = 4000), @p217='?' (Size = 450), @p218='?' (DbType = DateTime2), @p219='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+MERGE [Enrollments] USING (
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, 0),
+(@p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, 1),
+(@p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, 2),
+(@p33, @p34, @p35, @p36, @p37, @p38, @p39, @p40, @p41, @p42, @p43, 3),
+(@p44, @p45, @p46, @p47, @p48, @p49, @p50, @p51, @p52, @p53, @p54, 4),
+(@p55, @p56, @p57, @p58, @p59, @p60, @p61, @p62, @p63, @p64, @p65, 5),
+(@p66, @p67, @p68, @p69, @p70, @p71, @p72, @p73, @p74, @p75, @p76, 6),
+(@p77, @p78, @p79, @p80, @p81, @p82, @p83, @p84, @p85, @p86, @p87, 7),
+(@p88, @p89, @p90, @p91, @p92, @p93, @p94, @p95, @p96, @p97, @p98, 8),
+(@p99, @p100, @p101, @p102, @p103, @p104, @p105, @p106, @p107, @p108, @p109, 9),
+(@p110, @p111, @p112, @p113, @p114, @p115, @p116, @p117, @p118, @p119, @p120, 10),
+(@p121, @p122, @p123, @p124, @p125, @p126, @p127, @p128, @p129, @p130, @p131, 11),
+(@p132, @p133, @p134, @p135, @p136, @p137, @p138, @p139, @p140, @p141, @p142, 12),
+(@p143, @p144, @p145, @p146, @p147, @p148, @p149, @p150, @p151, @p152, @p153, 13),
+(@p154, @p155, @p156, @p157, @p158, @p159, @p160, @p161, @p162, @p163, @p164, 14),
+(@p165, @p166, @p167, @p168, @p169, @p170, @p171, @p172, @p173, @p174, @p175, 15),
+(@p176, @p177, @p178, @p179, @p180, @p181, @p182, @p183, @p184, @p185, @p186, 16),
+(@p187, @p188, @p189, @p190, @p191, @p192, @p193, @p194, @p195, @p196, @p197, 17),
+(@p198, @p199, @p200, @p201, @p202, @p203, @p204, @p205, @p206, @p207, @p208, 18),
+(@p209, @p210, @p211, @p212, @p213, @p214, @p215, @p216, @p217, @p218, @p219, 19)) AS i ([AmountPaid], [CourseId], [CreatedAt], [CreatedBy], [DateTime], [IsDeleted], [PaidAt], [Status], [StudentId], [UpdatedAt], [UpdatedBy], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([AmountPaid], [CourseId], [CreatedAt], [CreatedBy], [DateTime], [IsDeleted], [PaidAt], [Status], [StudentId], [UpdatedAt], [UpdatedBy])
+VALUES (i.[AmountPaid], i.[CourseId], i.[CreatedAt], i.[CreatedBy], i.[DateTime], i.[IsDeleted], i.[PaidAt], i.[Status], i.[StudentId], i.[UpdatedAt], i.[UpdatedBy])
+OUTPUT INSERTED.[Id], i._Position;
+2026-05-14 12:24:46.715 +03:00 [ERR] An exception occurred in the database while saving changes for context type 'EduPlatform.Infrastructure.Data.AppDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'DateTime'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__211_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+ClientConnectionId:babe607e-8737-4f48-afcd-185756dafad8
+Error Number:207,State:1,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'DateTime'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__211_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+ClientConnectionId:babe607e-8737-4f48-afcd-185756dafad8
+Error Number:207,State:1,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-05-14 13:45:24.962 +03:00 [INF] Applying database migrations. Attempt 1/10
+2026-05-14 13:45:26.295 +03:00 [WRN] The WebRootPath was not found: E:\Projects\Main project\EduPlatform_Fixed_v2\EduPlatform_Fixed\EduPlatform.API\wwwroot. Static files may be unavailable.
