@@ -1,22 +1,21 @@
 {
   "profiles": {
-    "EduPlatform.Web": {
+    "http": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "",
+      "applicationUrl": "http://localhost:6001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:5001"
+      }
     },
-    "EduPlatform.Web (HTTPS)": {
+
+    "https": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "",
+      "applicationUrl": "https://localhost:6002;http://localhost:6001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:5002;http://localhost:5001"
+      }
     }
   }
 }
