@@ -1,0 +1,96 @@
+@model AdminCreateUserVM
+
+@{
+    ViewData["Title"] = "Create User";
+    ViewData["PageTitle"] = "Create User";
+
+    var currentLang = Context.Request.Query["lang"].ToString();
+
+    if (string.IsNullOrWhiteSpace(currentLang))
+    {
+        currentLang = Context.Request.Cookies["lang"] ?? "en";
+    }
+
+    var isArabic = currentLang == "ar";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@(isArabic ? "إنشاء مستخدم" : "Create User")</h1>
+        <p class="muted">
+            @(isArabic ? "إنشاء حساب جديد وتحديد الدور الخاص به." : "Create a new account and assign its role.")
+        </p>
+    </div>
+
+    <a asp-action="Users" class="btn btn-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i>
+        @(isArabic ? "رجوع" : "Back")
+    </a>
+</section>
+
+<div class="card form-card">
+    <form asp-action="CreateUser" method="post" class="form">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        <div class="form-row cols-2">
+            <div class="form-group">
+                <label asp-for="FullName" class="form-label"></label>
+                <input asp-for="FullName" class="form-control" placeholder="Full name" />
+                <span asp-validation-for="FullName" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" placeholder="user@eduplatform.com" />
+                <span asp-validation-for="Email" class="field-validation-error"></span>
+            </div>
+        </div>
+
+        <div class="form-row cols-2">
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="Optional" />
+                <span asp-validation-for="PhoneNumber" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Role" class="form-label"></label>
+                <select asp-for="Role" class="form-control">
+                    <option value="">-- Select role --</option>
+                    @foreach (var role in Model.AvailableRoles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+                <span asp-validation-for="Role" class="field-validation-error"></span>
+            </div>
+        </div>
+
+        <div class="form-row cols-2">
+            <div class="form-group">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" type="password" placeholder="Minimum 8 characters" />
+                <span asp-validation-for="Password" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Repeat password" />
+                <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-person-plus"></i>
+                @(isArabic ? "إنشاء المستخدم" : "Create User")
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

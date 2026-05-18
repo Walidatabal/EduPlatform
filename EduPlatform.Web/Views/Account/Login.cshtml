@@ -1,0 +1,64 @@
+@model EduPlatform.Web.ViewModels.Account.LoginVM
+@{ ViewData["Title"] = "Sign In"; Layout = null; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Sign In — EduPlatform</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+</head>
+<body>
+<div class="auth-page">
+    <div class="auth-panel brand-side">
+        <div class="auth-brand-logo">Edu<span>Platform</span></div>
+        <div class="auth-headline">
+            <h1>Welcome back to your learning journey.</h1>
+            <p>Sign in to access your courses, grades and dashboard.</p>
+        </div>
+        <ul class="auth-features">
+            <li>Access all your enrolled courses</li>
+            <li>Track your learning progress</li>
+            <li>Connect with teachers and students</li>
+            <li>Download certificates</li>
+        </ul>
+        <p class="auth-footer">© 2026 EduPlatform — Enterprise School LMS</p>
+    </div>
+    <div class="auth-panel auth-form-side">
+        <div class="auth-form-wrap">
+            <h2>Sign in</h2>
+            <p class="sub">Enter your credentials to continue</p>
+
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <form asp-action="Login" method="post" class="form">
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]"/>
+
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">Email Address <span class="req">*</span></label>
+                    <input asp-for="Email" class="form-control" type="email" placeholder="you@school.edu" autocomplete="email"/>
+                    <span asp-validation-for="Email" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label">Password <span class="req">*</span></label>
+                    <input asp-for="Password" class="form-control" type="password" placeholder="••••••••" autocomplete="current-password"/>
+                    <span asp-validation-for="Password" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-check">
+                    <input asp-for="RememberMe" type="checkbox"/>
+                    <label asp-for="RememberMe">Remember me for 30 days</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full btn-lg">Sign In</button>
+            </form>
+
+            <div class="divider"></div>
+            <p style="text-align:center;font-size:14px;color:var(--text-3)">
+                Don't have an account?
+                <a asp-controller="Account" asp-action="Register" style="font-weight:700">Create one free</a>
+            </p>
+        </div>
+    </div>
+</div>
+</body></html>

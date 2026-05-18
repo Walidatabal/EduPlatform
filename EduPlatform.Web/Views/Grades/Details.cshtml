@@ -1,0 +1,62 @@
+@model EduPlatform.Web.ViewModels.Grades.GradeDetailsVM
+@{ ViewData["Title"] = Model.Name; ViewData["PageTitle"] = Model.Name; }
+
+<div class="breadcrumb" style="margin-bottom:16px;">
+    <a asp-controller="Grades" asp-action="Index">Grades</a>
+    <span class="sep"></span>
+    <span style="color:var(--text-1);">@Model.Name</span>
+</div>
+
+<div class="detail-hero" style="margin-bottom:24px;">
+    <div class="detail-hero-category">Grade Level</div>
+    <h1>@Model.Name</h1>
+    @if (!string.IsNullOrWhiteSpace(Model.Description))
+    {
+        <p style="opacity:.85;font-size:15px;margin-top:4px;">@Model.Description</p>
+    }
+    <div class="detail-hero-meta">
+        <span>📚 @Model.Subjects.Count subject@(Model.Subjects.Count != 1 ? "s" : "")</span>
+        <span>🎓 @Model.Subjects.Sum(s => s.CourseCount) course@(Model.Subjects.Sum(s => s.CourseCount) != 1 ? "s" : "")</span>
+    </div>
+    <div class="detail-hero-actions">
+        <a class="btn btn-outline-white" asp-controller="Grades" asp-action="Index">← All Grades</a>
+    </div>
+</div>
+
+@if (!Model.Subjects.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">📖</div>
+        <h3>No subjects yet</h3>
+        <p>Subjects for this grade level will appear here once they are added.</p>
+    </div>
+}
+else
+{
+    <div class="card-grid">
+        @foreach (var s in Model.Subjects)
+        {
+            <div class="card" style="display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div class="grade-icon" style="width:40px;height:40px;font-size:16px;background:var(--success-bg);color:var(--success);">
+                        @s.Name.Substring(0,1).ToUpper()
+                    </div>
+                    <div>
+                        <div style="font-size:15px;font-weight:700;">@s.Name</div>
+                        @if (!string.IsNullOrWhiteSpace(s.Description))
+                        {
+                            <div style="font-size:13px;color:var(--text-3);">@s.Description</div>
+                        }
+                    </div>
+                </div>
+                @if (s.CourseCount > 0)
+                {
+                    <span class="grade-chip" style="background:var(--brand-light);color:var(--brand);">@s.CourseCount course@(s.CourseCount != 1 ? "s" : "")</span>
+                }
+                <a class="btn btn-secondary btn-sm" asp-controller="Courses" asp-action="Index">
+                    Browse Courses →
+                </a>
+            </div>
+        }
+    </div>
+}

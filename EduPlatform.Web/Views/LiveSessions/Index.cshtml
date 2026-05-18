@@ -1,0 +1,54 @@
+@model EduPlatform.Web.ViewModels.LiveSessions.LiveSessionIndexVM
+
+@{
+    ViewData["Title"] = "Live Sessions";
+    ViewData["PageTitle"] = "Live Sessions";
+}
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>Live Sessions</h1>
+        <p>Upcoming and recorded learning sessions.</p>
+    </div>
+</div>
+
+@if (!Model.Sessions.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🎥</div>
+        <h3>No live sessions</h3>
+        <p>Upcoming sessions will appear here.</p>
+    </div>
+}
+else
+{
+    <div class="card-grid">
+        @foreach (var session in Model.Sessions)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">@session.Title</div>
+                        <div class="card-subtitle">@session.CourseTitle</div>
+                    </div>
+                    <span class="badge @(session.Status == "Scheduled" ? "blue" : "gray")">@session.Status</span>
+                </div>
+
+                <p class="td-sub">@session.Description</p>
+
+                <div style="margin-top:16px;display:flex;flex-direction:column;gap:6px;">
+                    <div><strong>Start:</strong> @session.StartTime.ToLocalTime().ToString("dd MMM yyyy HH:mm")</div>
+                    <div><strong>End:</strong> @session.EndTime.ToLocalTime().ToString("dd MMM yyyy HH:mm")</div>
+                </div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;">
+                    <a asp-controller="Courses" asp-action="Details" asp-route-id="@session.CourseId" class="btn btn-secondary btn-sm">Course</a>
+                    @if (!string.IsNullOrWhiteSpace(session.MeetingUrl))
+                    {
+                        <a href="@session.MeetingUrl" target="_blank" class="btn btn-primary btn-sm">Join</a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

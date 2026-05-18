@@ -1,0 +1,82 @@
+@model EduPlatform.Web.ViewModels.Account.RegisterVM
+@{ ViewData["Title"] = "Create Account"; Layout = null; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Create Account — EduPlatform</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+</head>
+<body>
+<div class="auth-page">
+    <div class="auth-panel brand-side">
+        <div class="auth-brand-logo">Edu<span>Platform</span></div>
+        <div class="auth-headline">
+            <h1>Start your learning journey today.</h1>
+            <p>Join thousands of students, teachers and parents on EduPlatform.</p>
+        </div>
+        <ul class="auth-features">
+            <li>Students — browse and enrol in courses</li>
+            <li>Teachers — apply to publish your courses</li>
+            <li>Parents — track your child's progress</li>
+            <li>Free to get started</li>
+        </ul>
+        <p class="auth-footer">© 2026 EduPlatform — Enterprise School LMS</p>
+    </div>
+    <div class="auth-panel auth-form-side">
+        <div class="auth-form-wrap">
+            <h2>Create account</h2>
+            <p class="sub">Fill in your details to get started</p>
+
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <form asp-action="Register" method="post" class="form">
+
+                <div class="form-group">
+                    <label asp-for="FullName" class="form-label">Full Name <span class="req">*</span></label>
+                    <input asp-for="FullName" class="form-control" placeholder="Jane Smith" autocomplete="name"/>
+                    <span asp-validation-for="FullName" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">Email Address <span class="req">*</span></label>
+                    <input asp-for="Email" class="form-control" type="email" placeholder="you@school.edu" autocomplete="email"/>
+                    <span asp-validation-for="Email" class="field-validation-error"></span>
+                </div>
+
+                <div class="form-row cols-2">
+                    <div class="form-group">
+                        <label asp-for="Password" class="form-label">Password <span class="req">*</span></label>
+                        <input asp-for="Password" class="form-control" type="password" placeholder="Min. 6 characters"/>
+                        <span asp-validation-for="Password" class="field-validation-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="req">*</span></label>
+                        <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Repeat password"/>
+                        <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Role" class="form-label">I am registering as <span class="req">*</span></label>
+                    <select asp-for="Role" class="form-control">
+                        <option value="Student">🎓 Student — browse and enrol in courses</option>
+                        <option value="PendingTeacher">👨‍🏫 Teacher — apply to teach (pending approval)</option>
+                        <option value="Parent">👪 Parent — track my child's progress</option>
+                    </select>
+                    <span asp-validation-for="Role" class="field-validation-error"></span>
+                    <p class="form-hint">Teacher accounts require admin approval before publishing courses.</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full btn-lg">Create Account</button>
+            </form>
+
+            <div class="divider"></div>
+            <p style="text-align:center;font-size:14px;color:var(--text-3)">
+                Already have an account?
+                <a asp-controller="Account" asp-action="Login" style="font-weight:700">Sign in</a>
+            </p>
+        </div>
+    </div>
+</div>
+</body></html>

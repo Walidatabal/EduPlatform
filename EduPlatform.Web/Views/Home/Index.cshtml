@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Home";
+    var courseCount = ViewBag.CourseCount ?? 0;
+    var gradeCount  = ViewBag.GradeCount  ?? 0;
+    var enrollCount = ViewBag.EnrollCount ?? 0;
+}
+
+<div class="hero-section">
+    <div class="hero-eyebrow">🎓 Enterprise School LMS</div>
+    <h1>The smarter way to <span>learn</span>, teach &amp; grow.</h1>
+    <p class="lead">A grade-based learning platform connecting schools, teachers, students and parents under one clean, enterprise-ready architecture.</p>
+    <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Register">Get Started Free</a>
+        <a class="btn btn-secondary btn-lg" asp-controller="Courses" asp-action="Index">Browse Courses</a>
+    </div>
+</div>
+
+<div class="stats-section">
+    <div class="stats-inner">
+        <div class="stats-item"><strong>@courseCount</strong><span>Live Courses</span></div>
+        <div class="stats-item"><strong>@gradeCount</strong><span>Grade Levels</span></div>
+        <div class="stats-item"><strong>@enrollCount</strong><span>Enrollments</span></div>
+        <div class="stats-item"><strong>100%</strong><span>Clean Architecture</span></div>
+    </div>
+</div>
+
+<div class="features-section" style="padding-top:64px;">
+    <h2>Everything you need in one platform</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🏫</div>
+            <h3>School Structure</h3>
+            <p>Organised by Grade → Subject → Course → Section → Lesson. Every piece of content has a clear home.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📡</div>
+            <h3>Live Sessions</h3>
+            <p>Schedule and run live classes with links and recordings. Teachers manage everything from their dashboard.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🏗️</div>
+            <h3>Enterprise Ready</h3>
+            <p>Clean Architecture with Domain, Application, Infrastructure, API and Web layers. Built to scale.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">👨‍🎓</div>
+            <h3>Role-Based Access</h3>
+            <p>Separate dashboards for Admin, Teacher, Student and Parent roles. Everyone sees exactly what they need.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💳</div>
+            <h3>Course Enrolment</h3>
+            <p>Students browse, enrol and track progress. Free and paid courses with receipt and certificate generation.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Real-time Analytics</h3>
+            <p>Admins get a live dashboard with enrolment counts, course performance and platform health via Seq.</p>
+        </div>
+    </div>
+</div>

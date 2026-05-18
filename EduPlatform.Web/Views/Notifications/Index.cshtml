@@ -1,0 +1,50 @@
+@model EduPlatform.Web.ViewModels.Notifications.NotificationIndexVM
+
+@{
+    ViewData["Title"] = "Notifications";
+    ViewData["PageTitle"] = "Notifications";
+}
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>Notifications</h1>
+        <p>System messages and LMS activity updates.</p>
+    </div>
+</div>
+
+@if (!Model.Notifications.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🔔</div>
+        <h3>No notifications</h3>
+        <p>You are all caught up.</p>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div style="display:flex;flex-direction:column;gap:12px;">
+            @foreach (var item in Model.Notifications)
+            {
+                <div style="display:flex;justify-content:space-between;gap:16px;border:1px solid var(--border);border-radius:var(--radius);padding:14px;background:@(item.IsRead ? "var(--surface)" : "var(--brand-light)");">
+                    <div>
+                        <div class="td-main">@item.Title</div>
+                        <div class="td-sub">@item.Message</div>
+                        <div class="td-sub">@item.CreatedAt.ToLocalTime().ToString("dd MMM yyyy HH:mm")</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span class="badge @(item.IsRead ? "gray" : "purple")">@(item.IsRead ? "Read" : "New")</span>
+                        @if (!item.IsRead)
+                        {
+                            <form asp-action="MarkRead" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-secondary btn-sm">Mark read</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,94 @@
+@model EduPlatform.Web.ViewModels.Cart.CartIndexVM
+
+@{
+    ViewData["Title"] = "My Cart";
+    ViewData["PageTitle"] = "My Cart";
+}
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>Shopping Cart</h1>
+        <p>Review selected courses before checkout.</p>
+    </div>
+    <div class="page-header-actions">
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-secondary">Continue Browsing</a>
+    </div>
+</div>
+
+@if (!Model.Items.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <p>Browse courses and add them to your cart.</p>
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-primary">Browse Courses</a>
+    </div>
+}
+else
+{
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Cart Items</div>
+                    <div class="card-subtitle">@Model.Items.Count course@(Model.Items.Count != 1 ? "s" : "") ready for checkout</div>
+                </div>
+            </div>
+
+            <div class="table-wrap" style="box-shadow:none;border:none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Price Snapshot</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>
+                                <div class="td-main">@item.CourseTitle</div>
+                                <div class="td-sub">Course #@item.CourseId · Cart Item #@item.Id</div>
+                            </td>
+                            <td>@item.PriceSnapshot.ToString("0.000") KD</td>
+                            <td>
+                                <form asp-action="Remove" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="courseId" value="@item.CourseId" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <aside class="card">
+            <div class="card-header">
+                <div class="card-title">Order Summary</div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="display:flex;justify-content:space-between;">
+                    <span class="td-sub">Total Courses</span>
+                    <strong>@Model.Items.Count</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:20px;">
+                    <span>Total</span>
+                    <strong>@Model.TotalAmount.ToString("0.000") KD</strong>
+                </div>
+
+                <a asp-controller="Orders" asp-action="Checkout" class="btn btn-primary btn-full">Proceed to Checkout</a>
+
+                <form asp-action="Clear" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-secondary btn-full">Clear Cart</button>
+                </form>
+            </div>
+        </aside>
+    </div>
+}

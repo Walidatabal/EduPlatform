@@ -1,0 +1,69 @@
+@model EduPlatform.Web.ViewModels.Orders.OrdersIndexVM
+
+@{
+    ViewData["Title"] = "Orders";
+    ViewData["PageTitle"] = "Orders";
+}
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>Orders</h1>
+        <p>Review your orders, payment status, and purchased courses.</p>
+    </div>
+    <div class="page-header-actions">
+        <a asp-controller="Orders" asp-action="Checkout" class="btn btn-primary">Checkout Cart</a>
+    </div>
+</div>
+
+@if (!Model.Orders.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🧾</div>
+        <h3>No orders yet</h3>
+        <p>Your checkout orders will appear here.</p>
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-primary">Browse Courses</a>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Order History</div>
+                <div class="card-subtitle">Demo and checkout orders</div>
+            </div>
+        </div>
+        <div class="table-wrap" style="box-shadow:none;border:none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Courses</th>
+                        <th>Coupon</th>
+                        <th>Discount</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var order in Model.Orders)
+                {
+                    <tr>
+                        <td class="td-main">#@order.Id</td>
+                        <td>
+                            @foreach (var item in order.Items)
+                            {
+                                <div><a asp-controller="Courses" asp-action="Details" asp-route-id="@item.CourseId">@item.CourseTitle</a></div>
+                            }
+                        </td>
+                        <td>@(order.CouponCode ?? "—")</td>
+                        <td>@order.DiscountAmount.ToString("0.000") KD</td>
+                        <td class="td-main">@order.Total.ToString("0.000") KD</td>
+                        <td><span class="badge @(order.Status == "Paid" ? "green" : "amber")">@order.Status</span></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

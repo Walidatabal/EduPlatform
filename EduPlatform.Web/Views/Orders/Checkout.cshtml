@@ -1,0 +1,67 @@
+@model EduPlatform.Web.ViewModels.Orders.CheckoutVM
+
+@{
+    ViewData["Title"] = "Checkout";
+    ViewData["PageTitle"] = "Checkout";
+}
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>Checkout</h1>
+        <p>Create an order from your current cart. Payment integration comes later.</p>
+    </div>
+</div>
+
+@if (!Model.Items.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <p>Add courses before checkout.</p>
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-primary">Browse Courses</a>
+    </div>
+}
+else
+{
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Checkout Items</div>
+            </div>
+            <div class="table-wrap" style="box-shadow:none;border:none;">
+                <table>
+                    <thead><tr><th>Course</th><th>Price</th></tr></thead>
+                    <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td class="td-main">@item.CourseTitle</td>
+                            <td>@item.Price.ToString("0.000") KD</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <aside class="card">
+            <div class="card-header"><div class="card-title">Order Summary</div></div>
+            <form asp-action="Checkout" method="post" class="form">
+                @Html.AntiForgeryToken()
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <strong>@Model.Subtotal.ToString("0.000") KD</strong>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="CouponCode" class="form-label">Coupon code</label>
+                    <input asp-for="CouponCode" class="form-control" placeholder="WELCOME10" />
+                    <span class="form-hint">Demo coupons: WELCOME10, SAVE5KD</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">Create Order</button>
+            </form>
+        </aside>
+    </div>
+}
