@@ -1,0 +1,26 @@
+using EduPlatform.Domain.Entities;
+using EduPlatform.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace EduPlatform.Infrastructure.Persistence.Configurations;
+
+public class LiveSessionConfiguration : IEntityTypeConfiguration<LiveSession>
+{
+    public void Configure(EntityTypeBuilder<LiveSession> builder)
+    {
+        builder.HasQueryFilter(x => !x.IsDeleted);
+
+        builder.Property(x => x.Title)
+            .HasMaxLength(250)
+            .IsRequired();
+
+        builder.Property(x => x.Status)
+            .HasConversion<string>();
+
+        builder.HasOne(x => x.Course)
+            .WithMany(x => x.LiveSessions)
+            .HasForeignKey(x => x.CourseId)
+            .OnDelete(DeleteBehavior.NoAction);
+    }
+}

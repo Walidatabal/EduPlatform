@@ -1,0 +1,36 @@
+name: EduPlatform CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    name: Restore, build, and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore EduPlatform.sln
+
+      - name: Build solution
+        run: dotnet build EduPlatform.sln --configuration Release --no-restore
+
+      - name: Run unit tests
+        run: dotnet test EduPlatform.Tests/EduPlatform.Tests.csproj --configuration Release --no-build --collect:"XPlat Code Coverage"
+
+      - name: Publish API build check
+        run: dotnet publish EduPlatform.API/EduPlatform.API.csproj --configuration Release --no-build --output ./artifacts/api
+
+      - name: Publish Web build check
+        run: dotnet publish EduPlatform.Web/EduPlatform.Web.csproj --configuration Release --no-build --output ./artifacts/web

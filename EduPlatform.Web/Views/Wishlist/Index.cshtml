@@ -1,0 +1,58 @@
+@model EduPlatform.Web.ViewModels.Wishlist.WishlistIndexVM
+
+@{
+    ViewData["Title"] = "Wishlist";
+    ViewData["PageTitle"] = "Wishlist";
+}
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>Wishlist</h1>
+        <p>Saved courses you may want to buy or enroll in later.</p>
+    </div>
+    <div class="page-header-actions">
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-primary">Browse Courses</a>
+    </div>
+</div>
+
+@if (!Model.Items.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">⭐</div>
+        <h3>No wishlist items</h3>
+        <p>Add courses to your wishlist from the course catalog.</p>
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-primary">Browse Courses</a>
+    </div>
+}
+else
+{
+    <div class="card-grid">
+        @foreach (var item in Model.Items)
+        {
+            <div class="course-card">
+                <div class="course-thumb">
+                    <div class="course-thumb-icon">⭐</div>
+                    <span class="course-thumb-badge">Saved</span>
+                </div>
+                <div class="course-body">
+                    <div class="course-category">Wishlist</div>
+                    <div class="course-title">@item.CourseTitle</div>
+                    <div class="course-meta">
+                        <span>Course #@item.CourseId</span>
+                    </div>
+                </div>
+                <div class="course-footer">
+                    <div class="course-price">@item.Price.ToString("0.000") KD</div>
+                    <div style="display:flex;gap:8px;">
+                        <a asp-controller="Courses" asp-action="Details" asp-route-id="@item.CourseId" class="btn btn-secondary btn-sm">Details</a>
+                        <form asp-controller="Wishlist" asp-action="Remove" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="courseId" value="@item.CourseId" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

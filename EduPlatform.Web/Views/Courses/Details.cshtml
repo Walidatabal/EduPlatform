@@ -1,0 +1,236 @@
+@model EduPlatform.Web.ViewModels.Courses.CourseDetailsVM
+@{ ViewData["Title"] = Model.Title; ViewData["PageTitle"] = "Course Details"; }
+
+<!-- Breadcrumb -->
+<div class="breadcrumb" style="margin-bottom:16px;">
+    <a asp-controller="Courses" asp-action="Index">Courses</a>
+    <span class="sep"></span>
+    <span style="color:var(--text-1);">@Model.Title</span>
+</div>
+
+<!-- Hero -->
+<div class="detail-hero">
+    <div class="detail-hero-category">
+        @(Model.GradeName ?? "") @(Model.GradeName != null && Model.SubjectName != null ? "›" : "") @(Model.SubjectName ?? "") @(Model.CategoryName != null ? "· " + Model.CategoryName : "")
+    </div>
+    <h1>@Model.Title</h1>
+    <div class="detail-hero-meta">
+        <span>📊 @Model.Level</span>
+        <span>🌐 @Model.Language</span>
+        @if (Model.ReviewCount > 0)
+        {
+            <span>★ @Model.AverageRating.ToString("F1") (@Model.ReviewCount reviews)</span>
+        }
+        <span>👥 @Model.EnrollmentCount enrolled</span>
+    </div>
+    <div class="detail-hero-actions">
+        @if (Model.IsEnrolled)
+        {
+            <span class="btn btn-white">✓ Already Enrolled</span>
+        }
+        else
+        {
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <form asp-controller="Cart" asp-action="Add" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="courseId" value="@Model.Id" />
+                    <button type="submit" class="btn btn-white">
+                        @(Model.Price == 0 ? "Add Free Course" : $"Add To Cart · {Model.Price:C}")
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a class="btn btn-white" asp-controller="Account" asp-action="Login">
+                    @(Model.Price == 0 ? "Login to Enrol" : $"Login to Buy · {Model.Price:C}")
+                </a>
+            }
+        }
+        <a class="btn btn-outline-white" asp-controller="Courses" asp-action="Index">← Back to Courses</a>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start;">
+
+    <div style="display:flex;flex-direction:column;gap:20px;">
+        <!-- Description -->
+        @if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="card">
+                <div class="card-header"><div class="card-title">About this Course</div></div>
+                <p style="font-size:14px;line-height:1.7;color:var(--text-2);">@Model.Description</p>
+            </div>
+        }
+
+        <!-- Learning outcomes -->
+        @if (!string.IsNullOrWhiteSpace(Model.LearningOutcomes))
+        {
+            <div class="card">
+                <div class="card-header"><div class="card-title">What you'll learn</div></div>
+                <p style="font-size:14px;line-height:1.7;color:var(--text-2);">@Model.LearningOutcomes</p>
+            </div>
+        }
+
+        <!-- Requirements -->
+        @if (!string.IsNullOrWhiteSpace(Model.Requirements))
+        {
+            <div class="card">
+                <div class="card-header"><div class="card-title">Requirements</div></div>
+                <p style="font-size:14px;line-height:1.7;color:var(--text-2);">@Model.Requirements</p>
+            </div>
+        }
+
+        <!-- Curriculum -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Course Curriculum</div>
+                    <div class="card-subtitle">@Model.Sections.Count section@(Model.Sections.Count != 1 ? "s" : "") · @Model.Sections.Sum(s => s.Lessons.Count) lesson@(Model.Sections.Sum(s => s.Lessons.Count) != 1 ? "s" : "")</div>
+                </div>
+            </div>
+            @if (!Model.Sections.Any())
+            {
+                <div class="empty-state" style="padding:24px;">
+                    <div class="empty-state-icon">📋</div>
+                    <p>No sections added yet.</p>
+                </div>
+            }
+            else
+            {
+                <div class="section-tree">
+                    @foreach (var sec in Model.Sections)
+                    {
+                        <div class="section-item">
+                            <div class="section-header">
+                                <div class="section-header-left">
+                                    <span class="section-num">@sec.Order</span>
+                                    @sec.Title
+                                </div>
+                                <span style="font-size:12px;color:var(--text-3);">@sec.Lessons.Count lesson@(sec.Lessons.Count != 1 ? "s" : "")</span>
+                            </div>
+                            @if (sec.Lessons.Any())
+                            {
+                                <div class="lesson-list">
+                                    @foreach (var l in sec.Lessons)
+                                    {
+                                        <div class="lesson-item">
+                                            <div class="lesson-icon">
+                                                @(l.ContentType == "Video" ? "▶" : l.ContentType == "PDF" ? "📄" : "📝")
+                                            </div>
+                                            <span>@l.Title</span>
+                                            <span class="lesson-type-badge">@l.ContentType</span>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Reviews -->
+        @if (Model.Reviews.Any())
+        {
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Student Reviews</div>
+                        <div class="card-subtitle">@Model.ReviewCount review@(Model.ReviewCount != 1 ? "s" : "") · @Model.AverageRating.ToString("F1") average</div>
+                    </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:16px;">
+                    @foreach (var r in Model.Reviews.Take(5))
+                    {
+                        <div style="display:flex;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+                            <div class="avatar sm">@r.StudentName.Substring(0,1)</div>
+                            <div>
+                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                                    <strong style="font-size:14px;">@r.StudentName</strong>
+                                    <span class="stars">@string.Concat(Enumerable.Repeat("★", r.Rating))@string.Concat(Enumerable.Repeat("☆", 5 - r.Rating))</span>
+                                </div>
+                                @if (!string.IsNullOrWhiteSpace(r.Comment))
+                                {
+                                    <p style="font-size:13px;color:var(--text-2);line-height:1.55;">@r.Comment</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Sidebar info card -->
+    <div style="position:sticky;top:calc(var(--topbar-h) + 16px);">
+        <div class="card">
+            <div style="text-align:center;padding:8px 0 16px;">
+                <div style="font-size:36px;font-weight:900;color:@(Model.Price == 0 ? "var(--success)" : "var(--text-1)");">
+                    @(Model.Price == 0 ? "Free" : Model.Price.ToString("C"))
+                </div>
+            </div>
+            @if (Model.IsEnrolled)
+            {
+                <div class="alert alert-success" style="text-align:center;">✓ You are enrolled in this course</div>
+            }
+            else
+            {
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <form asp-controller="Cart" asp-action="Add" method="post" style="margin-bottom:10px;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="courseId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-primary btn-full btn-lg">
+                            @(Model.Price == 0 ? "Add Free Course" : "Add To Cart")
+                        </button>
+                    </form>
+                    <form asp-controller="Wishlist" asp-action="Add" method="post" style="margin-bottom:10px;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="courseId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-secondary btn-full">
+                            Add To Wishlist
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a class="btn btn-primary btn-full btn-lg" asp-controller="Account" asp-action="Login"
+                       style="margin-bottom:10px;">
+                        @(Model.Price == 0 ? "Login to Enrol" : "Login to Buy")
+                    </a>
+                }
+            }
+            <div class="divider"></div>
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+                <div style="display:flex;justify-content:space-between;">
+                    <span style="color:var(--text-3);">Level</span><strong>@Model.Level</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;">
+                    <span style="color:var(--text-3);">Language</span><strong>@Model.Language</strong>
+                </div>
+                @if (Model.SubjectName != null)
+                {
+                    <div style="display:flex;justify-content:space-between;">
+                        <span style="color:var(--text-3);">Subject</span><strong>@Model.SubjectName</strong>
+                    </div>
+                }
+                @if (Model.GradeName != null)
+                {
+                    <div style="display:flex;justify-content:space-between;">
+                        <span style="color:var(--text-3);">Grade</span><strong>@Model.GradeName</strong>
+                    </div>
+                }
+                <div style="display:flex;justify-content:space-between;">
+                    <span style="color:var(--text-3);">Sections</span><strong>@Model.Sections.Count</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;">
+                    <span style="color:var(--text-3);">Lessons</span><strong>@Model.Sections.Sum(s => s.Lessons.Count)</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;">
+                    <span style="color:var(--text-3);">Students</span><strong>@Model.EnrollmentCount</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

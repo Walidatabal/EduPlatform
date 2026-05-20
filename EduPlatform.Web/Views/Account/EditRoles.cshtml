@@ -1,0 +1,55 @@
+@model EditUserRolesVM
+
+@{
+    ViewData["Title"] = "Edit Roles";
+    ViewData["PageTitle"] = "Edit User Roles";
+
+    var currentLang = Context.Request.Query["lang"].ToString();
+
+    if (string.IsNullOrWhiteSpace(currentLang))
+    {
+        currentLang = Context.Request.Cookies["lang"] ?? "en";
+    }
+
+    var isArabic = currentLang == "ar";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@(isArabic ? "تعديل أدوار المستخدم" : "Edit User Roles")</h1>
+        <p class="muted">@Model.UserDisplayName</p>
+    </div>
+</section>
+
+<div class="card form-card">
+    <form asp-action="EditRoles" method="post">
+        @Html.AntiForgeryToken()
+
+        <input asp-for="UserId" type="hidden" />
+        <input asp-for="UserDisplayName" type="hidden" />
+
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+        <div class="role-editor">
+            @for (var i = 0; i < Model.Roles.Count; i++)
+            {
+                <label class="role-check">
+                    <input asp-for="Roles[i].IsSelected" />
+                    <input asp-for="Roles[i].RoleName" type="hidden" />
+                    <span>@Model.Roles[i].RoleName</span>
+                </label>
+            }
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle"></i>
+                @(isArabic ? "حفظ الأدوار" : "Save Roles")
+            </button>
+
+            <a asp-action="Users" class="btn btn-secondary">
+                @(isArabic ? "رجوع" : "Back")
+            </a>
+        </div>
+    </form>
+</div>

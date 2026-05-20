@@ -1,0 +1,220 @@
+@model EduPlatform.Web.ViewModels.LiveSessions.LiveSessionIndexVM
+
+@{
+    ViewData["Title"] = "Live Sessions";
+    ViewData["PageTitle"] = "Live Sessions";
+
+    var currentLang = Context.Request.Query["lang"].ToString();
+    if (string.IsNullOrWhiteSpace(currentLang))
+        currentLang = Context.Request.Cookies["lang"] ?? "en";
+    var isArabic = currentLang == "ar";
+}
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>@(isArabic ? "الجلسات المباشرة" : "Live Sessions")</h1>
+        <p>@(isArabic ? "الجلسات القادمة والنشطة والمسجلة" : "Upcoming, active, and recorded learning sessions.")</p>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" style="margin-bottom:16px;">✓ @TempData["Success"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" style="margin-bottom:16px;">⚠ @TempData["Error"]</div>
+}
+
+@if (!Model.Sessions.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🎥</div>
+        <h3>@(isArabic ? "لا توجد جلسات" : "No live sessions")</h3>
+        <p>@(isArabic ? "ستظهر الجلسات القادمة هنا." : "Upcoming sessions will appear here.")</p>
+    </div>
+}
+else
+{
+    <div class="card-grid">
+        @foreach (var session in Model.Sessions)
+        {
+            <div class="card" style="position:relative;">
+
+                @* Live pulse indicator *@
+                @if (session.IsLive)
+                {
+                    <div style="position:absolute;top:16px;right:16px;display:flex;align-items:center;gap:6px;">
+                        <span style="width:10px;height:10px;border-radius:50%;background:#059669;display:inline-block;
+                        animation:pulse 1.5s infinite;"></span>
+                        <span style="font-size:12px;font-weight:700;color:#059669;">
+                            @(isArabic ? "مباشر الآن" : "LIVE NOW")
+                        </span>
+                    </div>
+                }
+
+                <div class="card-header">
+                    <div style="flex:1;padding-right:@(session.IsLive ? "80px" : "0")">
+                        <div class="card-title">@session.Title</div>
+                        <div class="card-subtitle">@session.CourseTitle</div>
+                    </div>
+                    <span class="badge @(session.Status switch
+                          {
+                              "Live" => "green",
+                              "Scheduled" => "blue",
+                              "Completed" => "gray",
+                              _ => "red"
+                          })">
+                        @(isArabic ? session.Status switch
+                        {
+                            "Live" => "مباشر",
+                            "Scheduled" => "مجدول",
+                            "Completed" => "منتهي",
+                            "Cancelled" => "ملغي",
+                            _ => session.Status
+                        } : session.Status)
+                    </span>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(session.Description))
+                {
+                    <p class="td-sub" style="margin-bottom:12px;">@session.Description</p>
+                }
+
+                <div style="display:flex;flex-direction:column;gap:6px;font-size:14px;margin-bottom:16px;">
+                    <div>
+                        🕐 <strong>@(isArabic ? "البداية:" : "Start:")</strong>
+                        @session.StartTime.ToLocalTime().ToString("dd MMM yyyy HH:mm")
+                    </div>
+                    <div>
+                        🕔 <strong>@(isArabic ? "النهاية:" : "End:")</strong>
+                        @session.EndTime.ToLocalTime().ToString("dd MMM yyyy HH:mm")
+                    </div>
+                </div>
+
+                @* ── Student sign-in status indicator ── *@
+                @if (User.IsInRole("Student") && session.IsRegistered)
+                {
+                    <div style="margin-bottom:12px;">
+                        @if (session.HasSignedIn)
+                        {
+                            <span class="badge green">
+                                ✓ @(isArabic ? "تم تسجيل حضورك" : "Signed In")
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge gray">
+                                @(isArabic ? "مسجل - لم تنضم بعد" : "Registered - Not joined yet")
+                            </span>
+                        }
+                    </div>
+                }
+
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+
+                    @* ── STUDENT: Join Live button ── *@
+                    @if (User.IsInRole("Student") && session.IsLive && !string.IsNullOrWhiteSpace(session.MeetingUrl))
+                    {
+                        <a href="@session.MeetingUrl" target="_blank" class="btn btn-primary btn-sm">
+                            🔴 @(isArabic ? "انضم للجلسة" : "Join Session")
+                        </a>
+                    }
+
+                    @* ── STUDENT: Sign In button ── *@
+                    @if (User.IsInRole("Student") && session.CanSignIn)
+                    {
+                        <form asp-action="SignIn" asp-route-id="@session.Id" method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm"
+                                    style="background:#059669;color:white;"
+                                    onclick="return confirm('@(isArabic ? "تأكيد تسجيل حضورك؟" : "Confirm sign in to this session?")')">
+                                ✅ @(isArabic ? "تسجيل الحضور" : "Sign In")
+                            </button>
+                        </form>
+                    }
+
+                    @* ── STUDENT: Sign Out button ── *@
+                    @if (User.IsInRole("Student") && session.CanSignOut)
+                    {
+                        <form asp-action="SignOut" asp-route-id="@session.Id" method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm"
+                                    style="background:#DC2626;color:white;"
+                                    onclick="return confirm('@(isArabic ? "تأكيد مغادرة الجلسة؟" : "Confirm sign out from this session?")')">
+                                🚪 @(isArabic ? "مغادرة الجلسة" : "Sign Out")
+                            </button>
+                        </form>
+                    }
+
+                    @* ── TEACHER/ADMIN: Attendance roster ── *@
+                    @if (Model.CanManageSessions)
+                    {
+                        <a asp-action="Attendance" asp-route-id="@session.Id" class="btn btn-secondary btn-sm">
+                            📋 @(isArabic ? "سجل الحضور" : "Attendance")
+                        </a>
+                    }
+
+                    @* ── Course link ── *@
+                    <a asp-controller="Courses" asp-action="Details" asp-route-id="@session.CourseId"
+                       class="btn btn-secondary btn-sm">
+                        @(isArabic ? "الكورس" : "Course")
+                    </a>
+
+                    @* ── TEACHER: Go Live ── *@
+                    @if (session.CanGoLive)
+                    {
+                        <form asp-action="GoLive" asp-route-id="@session.Id" method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm"
+                                    style="background:#4F46E5;color:white;"
+                                    onclick="return confirm('@(isArabic ? "هل تريد بدء الجلسة الآن؟" : "Start this session now?")')">
+                                ▶ @(isArabic ? "ابدأ البث" : "Go Live")
+                            </button>
+                        </form>
+                    }
+
+                    @* ── TEACHER: End Session ── *@
+                    @if (session.CanComplete)
+                    {
+                        <form asp-action="Complete" asp-route-id="@session.Id" method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm"
+                                    style="background:#D97706;color:white;"
+                                    onclick="return confirm('@(isArabic ? "هل تريد إنهاء الجلسة وتسجيل الحضور؟" : "End session and finalise attendance?")')">
+                                ■ @(isArabic ? "إنهاء الجلسة" : "End Session")
+                            </button>
+                        </form>
+                    }
+
+                    @* ── Recording link ── *@
+                    @if (session.Status == "Completed" && !string.IsNullOrWhiteSpace(session.MeetingUrl))
+                    {
+                        <a href="@session.MeetingUrl" target="_blank" class="btn btn-secondary btn-sm">
+                            ▶ @(isArabic ? "مشاهدة التسجيل" : "Recording")
+                        </a>
+                    }
+
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@* Live pulse animation *@
+<style>
+    @@keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.5);
+        }
+
+        70% {
+            box-shadow: 0 0 0 8px rgba(5, 150, 105, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(5, 150, 105, 0);
+        }
+    }
+</style>

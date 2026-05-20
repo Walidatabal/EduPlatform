@@ -1,0 +1,116 @@
+@model UserManagementVM
+
+@{
+    ViewData["Title"] = "Users";
+    ViewData["PageTitle"] = "User Access Management";
+
+    var currentLang = Context.Request.Query["lang"].ToString();
+
+    if (string.IsNullOrWhiteSpace(currentLang))
+    {
+        currentLang = Context.Request.Cookies["lang"] ?? "en";
+    }
+
+    var isArabic = currentLang == "ar";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@(isArabic ? "إدارة المستخدمين والصلاحيات" : "User Access Management")</h1>
+        <p class="muted">
+            @(isArabic ? "إدارة الأدوار، فك قفل الحسابات، وإعادة تعيين كلمات المرور." : "Manage roles, unlock accounts, and reset user passwords.")
+        </p>
+    </div>
+
+    @if (User.IsInRole(AppRoles.Admin))
+    {
+        <a asp-action="CreateUser" class="btn btn-primary btn-sm">
+            <i class="bi bi-person-plus"></i>
+            @(isArabic ? "إنشاء مستخدم" : "Create User")
+        </a>
+    }
+</section>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table enterprise-table">
+            <thead>
+                <tr>
+                    <th>@(isArabic ? "المستخدم" : "User")</th>
+                    <th>@(isArabic ? "البريد الإلكتروني" : "Email")</th>
+                    <th>@(isArabic ? "الأدوار" : "Roles")</th>
+                    <th>@(isArabic ? "الحالة" : "Status")</th>
+                    <th>@(isArabic ? "محاولات فاشلة" : "Failed Attempts")</th>
+                    <th>@(isArabic ? "الإجراءات" : "Actions")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>
+                            <strong>@user.FullName</strong>
+                        </td>
+                        <td>@user.Email</td>
+                        <td>
+                            @foreach (var role in user.Roles)
+                            {
+                                <span class="badge">@role</span>
+                            }
+                        </td>
+                        <td>
+                            @if (user.IsLockedOut)
+                            {
+                                <span class="badge danger">
+                                    @(isArabic ? "مقفول" : "Locked")
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge success">
+                                    @(isArabic ? "نشط" : "Active")
+                                </span>
+                            }
+                        </td>
+                        <td>@user.AccessFailedCount</td>
+                        <td>
+                            <div class="action-row">
+                                @if (User.IsInRole(AppRoles.Admin))
+                                {
+                                    <a asp-action="EditRoles"
+                                       asp-route-id="@user.Id"
+                                       class="btn btn-secondary btn-sm">
+                                        <i class="bi bi-person-gear"></i>
+                                        @(isArabic ? "الأدوار" : "Roles")
+                                    </a>
+
+                                    <a asp-action="ResetPassword"
+                                       asp-route-id="@user.Id"
+                                       class="btn btn-secondary btn-sm">
+                                        <i class="bi bi-key"></i>
+                                        @(isArabic ? "إعادة كلمة المرور" : "Reset Password")
+                                    </a>
+                                }
+
+                                @if (user.IsLockedOut)
+                                {
+                                    <form asp-action="Unlock"
+                                          asp-route-id="@user.Id"
+                                          method="post"
+                                          class="inline-form">
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-unlock"></i>
+                                            @(isArabic ? "فك القفل" : "Unlock")
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

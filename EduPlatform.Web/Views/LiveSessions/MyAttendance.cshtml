@@ -1,0 +1,127 @@
+@model EduPlatform.Web.ViewModels.LiveSessions.MyAttendanceVM
+
+@{
+    ViewData["Title"]     = "My Attendance";
+    ViewData["PageTitle"] = "My Attendance";
+
+    var currentLang = Context.Request.Query["lang"].ToString();
+    if (string.IsNullOrWhiteSpace(currentLang))
+        currentLang = Context.Request.Cookies["lang"] ?? "en";
+    var isArabic = currentLang == "ar";
+}
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>@(isArabic ? "حضوري" : "My Attendance")</h1>
+        <p>@(isArabic ? "سجل حضورك في الجلسات المباشرة." : "Your live session attendance history.")</p>
+    </div>
+</div>
+
+@* ── Summary stats ── *@
+@if (Model.Records.Any())
+{
+    <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:28px;">
+        <div class="stat-card">
+            <div class="stat-card-top">
+                <span class="stat-label">@(isArabic ? "إجمالي الجلسات" : "Total Sessions")</span>
+                <div class="stat-icon blue"><i class="bi bi-camera-video-fill"></i></div>
+            </div>
+            <div class="stat-value">@Model.TotalSessions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-top">
+                <span class="stat-label">@(isArabic ? "حضرت" : "Attended")</span>
+                <div class="stat-icon green"><i class="bi bi-check-circle-fill"></i></div>
+            </div>
+            <div class="stat-value" style="color:#059669;">@Model.PresentCount</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-top">
+                <span class="stat-label">@(isArabic ? "غائب" : "Absent")</span>
+                <div class="stat-icon red"><i class="bi bi-x-circle-fill"></i></div>
+            </div>
+            <div class="stat-value" style="color:#DC2626;">@Model.AbsentCount</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-top">
+                <span class="stat-label">@(isArabic ? "نسبة الحضور" : "Attendance Rate")</span>
+                <div class="stat-icon purple"><i class="bi bi-bar-chart-fill"></i></div>
+            </div>
+            <div class="stat-value">@Model.AttendanceRate%</div>
+            <div class="progress-bar-wrap">
+                <div class="progress-bar @(Model.AttendanceRate >= 75 ? "green" : Model.AttendanceRate >= 50 ? "amber" : "")"
+                     style="width:@Model.AttendanceRate%"></div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!Model.Records.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">📅</div>
+        <h3>@(isArabic ? "لا توجد سجلات" : "No attendance records")</h3>
+        <p>@(isArabic ? "الجلسات التي تحضرها ستظهر هنا." : "Sessions you attend will appear here.")</p>
+        <a asp-action="Index" class="btn btn-primary">
+            @(isArabic ? "عرض الجلسات المباشرة" : "View Live Sessions")
+        </a>
+    </div>
+}
+else
+{
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>@(isArabic ? "الجلسة" : "Session")</th>
+                    <th>@(isArabic ? "الكورس" : "Course")</th>
+                    <th>@(isArabic ? "التاريخ" : "Date")</th>
+                    <th>@(isArabic ? "الحالة" : "Status")</th>
+                    <th>@(isArabic ? "وقت الدخول" : "Joined")</th>
+                    <th>@(isArabic ? "وقت الخروج" : "Left")</th>
+                    <th>@(isArabic ? "المدة" : "Duration")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in Model.Records)
+                {
+                    <tr>
+                        <td>
+                            <div class="td-main">@row.SessionTitle</div>
+                        </td>
+                        <td>@row.CourseTitle</td>
+                        <td>@row.SessionDate.ToLocalTime().ToString("dd MMM yyyy")</td>
+                        <td>
+                            <span class="badge @(row.Status switch {
+                                "Present"    => "green",
+                                "Late"       => "amber",
+                                "Absent"     => "red",
+                                "Excused"    => "blue",
+                                "Registered" => "gray",
+                                _            => "gray"
+                            })">
+                                @(isArabic ? row.Status switch {
+                                    "Present"    => "حاضر",
+                                    "Late"       => "متأخر",
+                                    "Absent"     => "غائب",
+                                    "Excused"    => "معذور",
+                                    "Registered" => "مسجل",
+                                    _            => row.Status
+                                } : row.Status)
+                            </span>
+                        </td>
+                        <td>@(row.JoinedAt.HasValue
+                            ? row.JoinedAt.Value.ToLocalTime().ToString("HH:mm")
+                            : "—")</td>
+                        <td>@(row.LeftAt.HasValue
+                            ? row.LeftAt.Value.ToLocalTime().ToString("HH:mm")
+                            : "—")</td>
+                        <td>@(row.DurationMinutes.HasValue
+                            ? (isArabic ? $"{row.DurationMinutes} دقيقة" : $"{row.DurationMinutes} min")
+                            : "—")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

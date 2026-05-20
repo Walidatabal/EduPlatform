@@ -1,0 +1,206 @@
+@model PendingTasksVM
+
+@{
+    ViewData["Title"] = "Pending Tasks";
+    ViewData["PageTitle"] = "Pending Tasks";
+
+    var currentLang = Context.Request.Query["lang"].ToString();
+
+    if (string.IsNullOrWhiteSpace(currentLang))
+    {
+        currentLang = Context.Request.Cookies["lang"] ?? "en";
+    }
+
+    var isArabic = currentLang == "ar";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@(isArabic ? "المهام المعلقة" : "Pending Tasks")</h1>
+        <p class="muted">
+            @(isArabic ? "اعتماد المدرسين، اعتماد الكورسات، وفك قفل الحسابات." : "Approve teachers, approve courses, and unlock user accounts.")
+        </p>
+    </div>
+
+    <span class="badge">
+        @(isArabic ? "الإجمالي" : "Total"): @Model.TotalPending
+    </span>
+</section>
+
+<div class="dashboard-grid">
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">
+                    @(isArabic ? "مدرسون بانتظار الاعتماد" : "Pending Teachers")
+                </div>
+                <div class="card-subtitle">
+                    @(isArabic ? "طلبات التسجيل كمدرس." : "Teacher registration requests.")
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.PendingTeachers.Any())
+        {
+            <p class="muted">@(isArabic ? "لا توجد طلبات مدرسين معلقة." : "No pending teacher requests.")</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table enterprise-table">
+                    <thead>
+                        <tr>
+                            <th>@(isArabic ? "الاسم" : "Name")</th>
+                            <th>@(isArabic ? "البريد" : "Email")</th>
+                            <th>@(isArabic ? "الإجراء" : "Action")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var teacher in Model.PendingTeachers)
+                    {
+                        <tr>
+                            <td>@teacher.FullName</td>
+                            <td>@teacher.Email</td>
+                            <td>
+                                <div class="action-row">
+                                    <form asp-action="ApproveTeacher" asp-route-id="@teacher.UserId" method="post" class="inline-form">
+                                        @Html.AntiForgeryToken()
+                                        <button class="btn btn-primary btn-sm" type="submit">
+                                            <i class="bi bi-check-circle"></i>
+                                            @(isArabic ? "اعتماد" : "Approve")
+                                        </button>
+                                    </form>
+
+                                    <form asp-action="RejectTeacher" asp-route-id="@teacher.UserId" method="post" class="inline-form">
+                                        @Html.AntiForgeryToken()
+                                        <button class="btn btn-secondary btn-sm" type="submit">
+                                            <i class="bi bi-x-circle"></i>
+                                            @(isArabic ? "رفض" : "Reject")
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">
+                    @(isArabic ? "كورسات بانتظار الاعتماد" : "Pending Courses")
+                </div>
+                <div class="card-subtitle">
+                    @(isArabic ? "كورسات تحتاج مراجعة قبل النشر." : "Courses that require review before publishing.")
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.PendingCourses.Any())
+        {
+            <p class="muted">@(isArabic ? "لا توجد كورسات معلقة." : "No pending courses.")</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table enterprise-table">
+                    <thead>
+                        <tr>
+                            <th>@(isArabic ? "الكورس" : "Course")</th>
+                            <th>@(isArabic ? "المدرس" : "Teacher")</th>
+                            <th>@(isArabic ? "تاريخ الإنشاء" : "Created")</th>
+                            <th>@(isArabic ? "الإجراء" : "Action")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var course in Model.PendingCourses)
+                    {
+                        <tr>
+                            <td>@course.Title</td>
+                            <td>@course.TeacherName</td>
+                            <td>@course.CreatedAt.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                <div class="action-row">
+                                    <form asp-action="ApproveCourse" asp-route-id="@course.CourseId" method="post" class="inline-form">
+                                        @Html.AntiForgeryToken()
+                                        <button class="btn btn-primary btn-sm" type="submit">
+                                            <i class="bi bi-check-circle"></i>
+                                            @(isArabic ? "نشر" : "Approve")
+                                        </button>
+                                    </form>
+
+                                    <form asp-action="RejectCourse" asp-route-id="@course.CourseId" method="post" class="inline-form">
+                                        @Html.AntiForgeryToken()
+                                        <button class="btn btn-secondary btn-sm" type="submit">
+                                            <i class="bi bi-x-circle"></i>
+                                            @(isArabic ? "رفض" : "Reject")
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">
+                    @(isArabic ? "حسابات مقفولة" : "Locked Accounts")
+                </div>
+                <div class="card-subtitle">
+                    @(isArabic ? "حسابات تم قفلها بسبب محاولات دخول خاطئة." : "Accounts locked due to failed login attempts.")
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.LockedUsers.Any())
+        {
+            <p class="muted">@(isArabic ? "لا توجد حسابات مقفولة." : "No locked accounts.")</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table enterprise-table">
+                    <thead>
+                        <tr>
+                            <th>@(isArabic ? "المستخدم" : "User")</th>
+                            <th>@(isArabic ? "البريد" : "Email")</th>
+                            <th>@(isArabic ? "مقفول حتى" : "Locked Until")</th>
+                            <th>@(isArabic ? "الإجراء" : "Action")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var user in Model.LockedUsers)
+                    {
+                        <tr>
+                            <td>@user.FullName</td>
+                            <td>@user.Email</td>
+                            <td>@user.LockoutEnd</td>
+                            <td>
+                                <form asp-action="UnlockUser" asp-route-id="@user.UserId" method="post" class="inline-form">
+                                    @Html.AntiForgeryToken()
+                                    <button class="btn btn-primary btn-sm" type="submit">
+                                        <i class="bi bi-unlock"></i>
+                                        @(isArabic ? "فك القفل" : "Unlock")
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+</div>

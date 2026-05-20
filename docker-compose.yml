@@ -1,0 +1,135 @@
+version: '3.9'
+
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: eduplatform_sqlserver
+
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-Dev_Password123!}"
+
+    ports:
+      - "1433:1433"
+
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P ${MSSQL_SA_PASSWORD:-Dev_Password123!} -Q 'SELECT 1' || exit 1"
+        ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: eduplatform_redis
+
+    ports:
+      - "6379:6379"
+
+    restart: unless-stopped
+
+  seq:
+    image: datalust/seq:2024.3
+    container_name: eduplatform_seq
+
+    environment:
+      ACCEPT_EULA: "Y"
+
+    ports:
+      - "8088:80"
+
+    volumes:
+      - seq_data:/data
+
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: eduplatform_api
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_URLS: "http://+:8080"
+
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=EduPlatformDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Dev_Password123!};TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=True"
+
+      ConnectionStrings__Redis: "redis:6379"
+
+      Jwt__Key: "${JWT_KEY:-EduPlatform_Docker_Development_JWT_SECRET_KEY_2026_123456789}"
+      Jwt__Issuer: "EduPlatform"
+      Jwt__Audience: "EduPlatformUsers"
+      Jwt__ExpiryHours: "24"
+      Jwt__RefreshTokenDays: "7"
+
+      Seeding__AdminEmail: "${ADMIN_EMAIL:-admin@eduplatform.com}"
+      Seeding__AdminPassword: "${ADMIN_PASSWORD:-Admin@123456}"
+      Seeding__AdminFullName: "Platform Admin"
+
+      Cors__AllowedOrigins__0: "http://localhost:3000"
+      Cors__AllowedOrigins__1: "http://localhost:5173"
+
+      Serilog__WriteTo__2__Name: "Seq"
+      Serilog__WriteTo__2__Args__serverUrl: "http://seq:80"
+
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+      redis:
+        condition: service_started
+
+      seq:
+        condition: service_started
+
+    restart: on-failure
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.Web
+
+    container_name: eduplatform_web
+
+    ports:
+      - "8081:8081"
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_URLS: "http://+:8081"
+
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=EduPlatformDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Dev_Password123!};TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=True"
+
+      ApiSettings__BaseUrl: "http://api:8080"
+
+      Seeding__AdminEmail: "${ADMIN_EMAIL:-admin@eduplatform.com}"
+      Seeding__AdminPassword: "${ADMIN_PASSWORD:-Admin@123456}"
+      Seeding__AdminFullName: "Platform Admin"
+
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+      api:
+        condition: service_started
+
+    restart: on-failure
+
+volumes:
+  sqlserver_data:
+  seq_data:

@@ -1,0 +1,104 @@
+@model IReadOnlyList<EduPlatform.Web.ViewModels.Courses.CourseListItemVM>
+@{ ViewData["Title"] = "Courses"; ViewData["PageTitle"] = "Browse Courses"; }
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>Courses</h1>
+        <p>Discover published courses across all grade levels and subjects</p>
+    </div>
+</div>
+
+<!-- Search + filter -->
+<form method="get" asp-action="Index" style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+    <div class="search-bar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-4);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input name="search" value="@ViewBag.Search" placeholder="Search courses…"/>
+    </div>
+    <div class="filter-bar" style="margin:0;">
+        <button type="submit" name="level" value="" class="filter-chip @(ViewBag.Level == null ? "active" : "")">All levels</button>
+        <button type="submit" name="level" value="Beginner" class="filter-chip @(ViewBag.Level == "Beginner" ? "active" : "")">Beginner</button>
+        <button type="submit" name="level" value="Intermediate" class="filter-chip @(ViewBag.Level == "Intermediate" ? "active" : "")">Intermediate</button>
+        <button type="submit" name="level" value="Advanced" class="filter-chip @(ViewBag.Level == "Advanced" ? "active" : "")">Advanced</button>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">📚</div>
+        <h3>No courses found</h3>
+        <p>@(ViewBag.Search != null ? "Try a different search term or clear the filter." : "No published courses are available yet.")</p>
+        @if (ViewBag.Search != null)
+        {
+            <a asp-action="Index" class="btn btn-secondary">Clear filter</a>
+        }
+    </div>
+}
+else
+{
+    <p style="font-size:13px;color:var(--text-3);margin-bottom:16px;">Showing <strong>@Model.Count</strong> course@(Model.Count != 1 ? "s" : "")</p>
+    <div class="card-grid">
+        @foreach (var c in Model)
+        {
+            <div class="course-card">
+                <div class="course-thumb">
+                    <span class="course-thumb-icon">📖</span>
+                    <span class="course-thumb-badge">@c.Level</span>
+                </div>
+                <div class="course-body">
+                    @if (c.CategoryName != null)
+                    {
+                        <div class="course-category">@c.CategoryName</div>
+                    }
+                    <div class="course-title">@c.Title</div>
+                    @if (c.Description != null)
+                    {
+                        <div class="course-desc">@c.Description</div>
+                    }
+                    <div class="course-meta">
+                        <span>🌐 @c.Language</span>
+                        @if (c.GradeName != null)
+                        {
+                            <span>🏫 @c.GradeName</span>
+                        }
+                        @if (c.EnrollmentCount > 0)
+                        {
+                            <span>👥 @c.EnrollmentCount</span>
+                        }
+                    </div>
+                </div>
+                <div class="course-footer">
+                    <span class="course-price @(c.Price == 0 ? "free" : "")">
+                        @(c.Price == 0 ? "Free" : c.Price.ToString("C"))
+                    </span>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        @if (c.ReviewCount > 0)
+                        {
+                            <span style="font-size:13px;color:var(--text-3);">
+                                <span class="stars">★</span> @c.AverageRating.ToString("F1") (@c.ReviewCount)
+                            </span>
+                        }
+                        <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@c.Id">View</a>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <form asp-controller="Cart" asp-action="Add" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="courseId" value="@c.Id" />
+                                <button type="submit" class="btn btn-primary btn-sm">Add To Cart</button>
+                            </form>
+                            <form asp-controller="Wishlist" asp-action="Add" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="courseId" value="@c.Id" />
+                                <button type="submit" class="btn btn-secondary btn-sm">☆</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a class="btn btn-primary btn-sm" asp-controller="Account" asp-action="Login">Login to Buy</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

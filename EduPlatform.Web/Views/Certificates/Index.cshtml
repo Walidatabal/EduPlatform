@@ -1,0 +1,46 @@
+@model EduPlatform.Web.ViewModels.Certificates.CertificateIndexVM
+
+@{
+    ViewData["Title"] = "Certificates";
+    ViewData["PageTitle"] = "Certificates";
+}
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>Certificates</h1>
+        <p>Issued certificates for completed courses.</p>
+    </div>
+</div>
+
+@if (!Model.Certificates.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🏆</div>
+        <h3>No certificates yet</h3>
+        <p>Complete courses to earn certificates.</p>
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-primary">Browse Courses</a>
+    </div>
+}
+else
+{
+    <div class="card-grid">
+        @foreach (var cert in Model.Certificates)
+        {
+            <div class="card">
+                <div style="font-size:42px;margin-bottom:12px;">🏆</div>
+                <h3>@cert.CourseTitle</h3>
+                <p class="td-sub">Certificate Number</p>
+                <div class="td-main">@cert.CertificateNumber</div>
+                <p class="td-sub" style="margin-top:12px;">Issued @cert.IssuedAt.ToString("dd MMM yyyy")</p>
+                <span class="badge @(cert.Status == "Issued" ? "green" : "red")">@cert.Status</span>
+                <div style="margin-top:16px;">
+                    <a asp-controller="Courses" asp-action="Details" asp-route-id="@cert.CourseId" class="btn btn-secondary btn-sm">Course</a>
+                    @if (!string.IsNullOrWhiteSpace(cert.PdfUrl))
+                    {
+                        <a href="@cert.PdfUrl" class="btn btn-primary btn-sm">View PDF</a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

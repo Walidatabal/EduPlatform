@@ -1,0 +1,106 @@
+@model EduPlatform.Web.ViewModels.Relations.RelationsIndexVM
+
+@{
+    ViewData["Title"] = "Relations";
+    ViewData["PageTitle"] = "Business Relations";
+}
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>Business Relations</h1>
+        <p>Parent/student and teacher/course relationships based on your access level.</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-top"><span class="stat-label">Parent Links</span><span class="stat-icon purple"><i class="bi bi-people-fill"></i></span></div>
+        <div class="stat-value">@Model.ParentStudents.Count</div>
+        <div class="stat-trend">Linked parent/student records</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-top"><span class="stat-label">Teacher Courses</span><span class="stat-icon blue"><i class="bi bi-book-fill"></i></span></div>
+        <div class="stat-value">@Model.TeacherCourses.Count</div>
+        <div class="stat-trend">Courses owned by teachers</div>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Parent → Student</div>
+                <div class="card-subtitle">Used by parent dashboards and student monitoring.</div>
+            </div>
+        </div>
+
+        @if (!Model.ParentStudents.Any())
+        {
+            <div class="empty-state" style="padding:28px;">
+                <div class="empty-state-icon"><i class="bi bi-person-hearts"></i></div>
+                <h3>No parent links visible</h3>
+                <p>Admin can see all links; parents see only their linked students.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-wrap" style="box-shadow:none;border:none;">
+                <table>
+                    <thead>
+                    <tr><th>Parent</th><th>Student</th><th>Relation</th><th>Learning</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.ParentStudents)
+                    {
+                        <tr>
+                            <td><div class="td-main">@item.ParentName</div><div class="td-sub">@item.ParentEmail</div></td>
+                            <td><div class="td-main">@item.StudentName</div><div class="td-sub">@item.StudentEmail</div></td>
+                            <td><span class="badge purple">@item.RelationshipType</span></td>
+                            <td>@item.EnrollmentsCount enrollments · @item.CertificatesCount certificates</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Teacher → Courses</div>
+                <div class="card-subtitle">Used by teacher dashboards, course moderation, and revenue reports.</div>
+            </div>
+        </div>
+
+        @if (!Model.TeacherCourses.Any())
+        {
+            <div class="empty-state" style="padding:28px;">
+                <div class="empty-state-icon"><i class="bi bi-book"></i></div>
+                <h3>No teacher courses visible</h3>
+                <p>Admin can see all courses; teachers see only their own courses.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-wrap" style="box-shadow:none;border:none;">
+                <table>
+                    <thead>
+                    <tr><th>Teacher</th><th>Course</th><th>Status</th><th>Students</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.TeacherCourses)
+                    {
+                        <tr>
+                            <td><div class="td-main">@item.TeacherName</div><div class="td-sub">@item.TeacherEmail</div></td>
+                            <td>@item.CourseTitle</td>
+                            <td><span class="badge green">@item.Status / @item.ApprovalStatus</span></td>
+                            <td>@item.EnrollmentsCount</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

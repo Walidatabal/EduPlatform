@@ -1,0 +1,58 @@
+@model EduPlatform.Web.ViewModels.Enrollments.EnrollmentIndexVM
+
+@{
+    ViewData["Title"] = "My Learning";
+    ViewData["PageTitle"] = "My Learning";
+}
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>My Learning</h1>
+        <p>Courses you are enrolled in and can continue learning.</p>
+    </div>
+    <div class="page-header-actions">
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-primary">Browse Courses</a>
+    </div>
+</div>
+
+@if (!Model.Enrollments.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🎓</div>
+        <h3>No enrollments yet</h3>
+        <p>Enroll in a course to start learning.</p>
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-primary">Browse Courses</a>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="table-wrap" style="box-shadow:none;border:none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Enrolled At</th>
+                        <th>Amount Paid</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Enrollments)
+                {
+                    <tr>
+                        <td class="td-main">@item.CourseTitle</td>
+                        <td>@item.EnrolledAt.ToString("dd MMM yyyy")</td>
+                        <td>@item.AmountPaid.ToString("0.000") KD</td>
+                        <td><span class="badge @(item.Status == "Active" ? "green" : "gray")">@item.Status</span></td>
+                        <td>
+                            <a asp-controller="Courses" asp-action="Details" asp-route-id="@item.CourseId" class="btn btn-secondary btn-sm">Continue</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
