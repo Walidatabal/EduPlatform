@@ -20,6 +20,8 @@ public class ProfileVM
     [Phone(ErrorMessage = "Enter a valid phone number")]
     public string? PhoneNumber { get; set; }
 
+    public string? AvatarUrl { get; set; }
+
     public IReadOnlyList<string> Roles { get; set; } = [];
 }
 
@@ -90,6 +92,7 @@ public class UserListItemVM
     public bool IsLockedOut { get; set; }
     public DateTimeOffset? LockoutEnd { get; set; }
     public int AccessFailedCount { get; set; }
+    public string? AvatarUrl { get; set; }
     public IReadOnlyList<string> Roles { get; set; } = [];
 }
 

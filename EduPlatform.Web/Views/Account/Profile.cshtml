@@ -1,32 +1,104 @@
 @model ProfileVM
-
 @{
     ViewData["Title"] = "Profile";
     ViewData["PageTitle"] = "My Profile";
 
     var lang = Context.Request.Query["lang"].ToString();
     if (string.IsNullOrWhiteSpace(lang))
-    {
         lang = Context.Request.Cookies["lang"] ?? "en";
-    }
-
     var isArabic = lang == "ar";
+
+    string initials = (Model.FullName ?? "U").Length > 0
+        ? (Model.FullName ?? "U").Substring(0, 1).ToUpper()
+        : "U";
+}
+
+<!-- TempData alerts -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" style="margin-bottom:16px;">✓ @TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" style="margin-bottom:16px;">⚠ @TempData["Error"]</div>
 }
 
 <section class="page-header">
     <div>
         <h1>@(isArabic ? "الملف الشخصي" : "My Profile")</h1>
-        <p class="muted">
-            @(isArabic ? "إدارة بيانات حسابك الأساسية." : "Manage your basic account information.")
-        </p>
+        <p class="muted">@(isArabic ? "إدارة بيانات حسابك الأساسية." : "Manage your basic account information.")</p>
     </div>
 </section>
 
-@* Profile edit form: only profile fields are inside this POST form. *@
+<!-- Avatar card -->
+<div class="card form-card" style="margin-bottom:20px;">
+    <div class="card-header">
+        <span class="card-title"><i class="bi bi-person-circle"></i> @(isArabic ? "صورة الملف الشخصي" : "Profile Picture")</span>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+
+        <!-- Avatar preview -->
+        <div style="position:relative;flex-shrink:0;">
+            @if (!string.IsNullOrWhiteSpace(Model.AvatarUrl))
+            {
+                <img id="avatar-preview" src="@Model.AvatarUrl" alt="avatar"
+                     style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--border);" />
+            }
+            else
+            {
+                <div id="avatar-fallback"
+                     style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand-mid));color:white;font-weight:700;font-size:28px;display:flex;align-items:center;justify-content:center;">
+                    @initials
+                </div>
+                <img id="avatar-preview" src="" alt="preview"
+                     style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--border);display:none;" />
+            }
+        </div>
+
+        <!-- Upload form -->
+        <div style="flex:1;min-width:200px;">
+            <form asp-action="UploadAvatar" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <label class="upload-drop-zone" for="avatar-input" id="avatar-drop-zone">
+                    <i class="bi bi-cloud-upload" style="font-size:20px;color:var(--brand);"></i>
+                    <span style="font-size:13px;color:var(--text-2);">
+                        @(isArabic ? "اسحب أو اضغط لاختيار صورة" : "Drag & drop or click to choose")
+                    </span>
+                    <span style="font-size:11px;color:var(--text-4);">JPEG, PNG, WebP — max 5 MB</span>
+                    <input id="avatar-input" name="avatar" type="file"
+                           accept="image/jpeg,image/png,image/webp"
+                           style="display:none;" />
+                </label>
+
+                <div style="display:flex;gap:8px;margin-top:10px;">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-upload"></i>
+                        @(isArabic ? "رفع الصورة" : "Upload")
+                    </button>
+                    @if (!string.IsNullOrWhiteSpace(Model.AvatarUrl))
+                    {
+                        <button type="button" class="btn btn-danger btn-sm"
+                                onclick="document.getElementById('remove-avatar-form').submit()">
+                            <i class="bi bi-trash"></i>
+                            @(isArabic ? "حذف" : "Remove")
+                        </button>
+                    }
+                </div>
+            </form>
+
+            <form id="remove-avatar-form" asp-action="RemoveAvatar" method="post" style="display:none;">
+                @Html.AntiForgeryToken()
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Profile edit form -->
 <div class="card form-card">
     <form asp-controller="Account" asp-action="Profile" method="post">
         @Html.AntiForgeryToken()
-
         <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
 
         <div class="form-grid">
@@ -46,125 +118,75 @@
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="field-validation-error"></span>
             </div>
-
-            <div class="form-group">
-                <label>@(isArabic ? "الأدوار" : "Roles")</label>
-                <div class="role-list">
-                    @if (Model.Roles != null && Model.Roles.Any())
-                    {
-                        foreach (var role in Model.Roles)
-                        {
-                            var cls = role switch
-                            {
-                                "Admin" => "badge badge-role badge-admin",
-                                "ContentManager" => "badge badge-role badge-manager",
-                                "Teacher" => "badge badge-role badge-teacher",
-                                "PendingTeacher" => "badge badge-role badge-pending",
-                                "Parent" => "badge badge-role badge-parent",
-                                "Student" => "badge badge-role badge-student",
-                                _ => "badge badge-role"
-                            };
-
-                            var lbl = isArabic ? role switch
-                            {
-                                "Admin" => "مدير النظام",
-                                "ContentManager" => "مدير المحتوى",
-                                "Teacher" => "معلم",
-                                "PendingTeacher" => "معلم قيد المراجعة",
-                                "Parent" => "ولي أمر",
-                                "Student" => "طالب",
-                                _ => role
-                            } : role;
-
-                            <span class="@cls">@lbl</span>
-                        }
-                    }
-                    else
-                    {
-                        <span class="muted">@(isArabic ? "لا توجد أدوار مسجلة." : "No roles assigned.")</span>
-                    }
-                </div>
-            </div>
         </div>
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">
-                <i class="bi bi-check-circle"></i>
+                <i class="bi bi-save"></i>
                 @(isArabic ? "حفظ التغييرات" : "Save Changes")
             </button>
-
-            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">
-                <i class="bi bi-arrow-left-circle"></i>
-                @(isArabic ? "رجوع" : "Back")
+            <a asp-action="ChangePassword" class="btn btn-secondary">
+                <i class="bi bi-lock"></i>
+                @(isArabic ? "تغيير كلمة المرور" : "Change Password")
             </a>
         </div>
     </form>
 </div>
 
-@* Security actions are intentionally outside the profile POST form to avoid accidental profile submission. *@
-<div class="card form-card profile-security-wrapper">
-    <div class="profile-security-card">
-        <div class="profile-security-text">
-            <div class="profile-security-title">
-                <i class="bi bi-shield-lock-fill"></i>
-                @(isArabic ? "تغيير كلمة المرور" : "Change Password")
-            </div>
-            <div class="profile-security-subtitle">
-                @(isArabic
-                    ? "قم بتحديث كلمة مرورك بشكل دوري للحفاظ على أمان حسابك."
-                    : "Update your password regularly to keep your account secure.")
-            </div>
-        </div>
-
-        @* GET form guarantees navigation to /Account/ChangePassword and avoids nested-form problems. *@
-        <form asp-controller="Account" asp-action="ChangePassword" method="get" class="m-0">
-            <button type="submit" class="btn btn-secondary">
-                <i class="bi bi-shield-lock"></i>
-                @(isArabic ? "تغيير كلمة المرور" : "Change Password")
-            </button>
-        </form>
-    </div>
-</div>
-
-<style>
-    .profile-security-wrapper {
-        margin-top: 16px;
-    }
-
-    .profile-security-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-    }
-
-    .profile-security-title {
-        font-size: 15px;
-        font-weight: 700;
-        color: #0f172a;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .profile-security-title i {
-        color: #4f46e5;
-    }
-
-    .profile-security-subtitle {
-        font-size: 13px;
-        color: #64748b;
-        margin-top: 4px;
-    }
-
-    @@media (max-width: 768px) {
-        .profile-security-card {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-    }
-</style>
-
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <style>
+        .upload-drop-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+            text-align: center;
+        }
+
+            .upload-drop-zone:hover,
+            .upload-drop-zone.drag-over {
+                border-color: var(--brand);
+                background: var(--brand-light);
+            }
+    </style>
+    <script>
+        (function () {
+            const input     = document.getElementById('avatar-input');
+            const preview   = document.getElementById('avatar-preview');
+            const fallback  = document.getElementById('avatar-fallback');
+            const dropZone  = document.getElementById('avatar-drop-zone');
+
+            function showPreview(file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    if (preview)  { preview.src = e.target.result; preview.style.display = 'block'; }
+                    if (fallback) fallback.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+
+            input?.addEventListener('change', () => {
+                if (input.files?.[0]) showPreview(input.files[0]);
+            });
+
+            dropZone?.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+            dropZone?.addEventListener('dragleave', ()  => dropZone.classList.remove('drag-over'));
+            dropZone?.addEventListener('drop', e => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                const file = e.dataTransfer?.files?.[0];
+                if (file && input) {
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    input.files = dt.files;
+                    showPreview(file);
+                }
+            });
+        })();
+    </script>
 }

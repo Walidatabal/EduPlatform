@@ -1,3 +1,5 @@
+namespace EduPlatform.Application.Common.Interfaces;
+
 public interface IEmailService
 {
     Task SendAsync(

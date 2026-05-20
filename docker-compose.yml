@@ -1,4 +1,3 @@
-version: '3.9'
 
 services:
 
@@ -67,7 +66,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Docker
       ASPNETCORE_URLS: "http://+:8080"
 
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=EduPlatformDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Dev_Password123!};TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=True"
+      ConnectionStrings__DefaultConnection: "Server=tcp:eduplatform-server.database.windows.net,1433;Initial Catalog=EduPlatformDB;Persist Security Info=False;User ID=eduadmin;Password=EduP@ss2026!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 
       ConnectionStrings__Redis: "redis:6379"
 
@@ -113,7 +112,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Docker
       ASPNETCORE_URLS: "http://+:8081"
 
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=EduPlatformDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Dev_Password123!};TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=True"
+      ConnectionStrings__DefaultConnection: "Server=tcp:eduplatform-server.database.windows.net,1433;Initial Catalog=EduPlatformDB;Persist Security Info=False;User ID=eduadmin;Password=EduP@ss2026!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 
       ApiSettings__BaseUrl: "http://api:8080"
 

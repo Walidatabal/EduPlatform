@@ -5,7 +5,9 @@ using EduPlatform.Domain.Interfaces;
 using EduPlatform.Infrastructure.Data;
 using EduPlatform.Infrastructure.Identity;
 using EduPlatform.Infrastructure.Repositories;
+using EduPlatform.Infrastructure.Services;
 using EduPlatform.Infrastructure.Services.Auth;
+using EduPlatform.Infrastructure.Services.Storage;
 using EduPlatform.Infrastructure.Services.Lms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -79,10 +81,11 @@ public static class DependencyInjection
         services.AddScoped<ICouponService,      CouponService>();
         services.AddScoped<ICourseReviewService, CourseReviewService>();
         services.AddScoped<IOrderService,       OrderService>();
-        services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<INotificationService,     NotificationService>();
         services.AddScoped<IProgressService,    ProgressService>();
         services.AddScoped<ICertificateService, CertificateService>();
         services.AddScoped<ILiveSessionService, LiveSessionService>();
+        services.AddScoped<IBlobStorageService, BlobStorageService>();
         services.AddScoped<ICourseService,      CourseService>();
 
 

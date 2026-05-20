@@ -1,4 +1,6 @@
+using EduPlatform.Application.Common.Interfaces;
 using EduPlatform.Domain.Constants;
+using EduPlatform.Infrastructure.Services.Storage;
 using EduPlatform.Infrastructure.Identity;
 using EduPlatform.Web.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
@@ -21,15 +23,18 @@ public class AccountController : Controller
     private readonly SignInManager<ApplicationUser> _signIn;
     private readonly UserManager<ApplicationUser> _users;
     private readonly RoleManager<IdentityRole> _roles;
+    private readonly IBlobStorageService _blob;
 
     public AccountController(
         SignInManager<ApplicationUser> signIn,
         UserManager<ApplicationUser> users,
-        RoleManager<IdentityRole> roles)
+        RoleManager<IdentityRole> roles,
+        IBlobStorageService blob)
     {
         _signIn = signIn;
         _users = users;
         _roles = roles;
+        _blob  = blob;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -178,10 +183,11 @@ public class AccountController : Controller
         var roles = await _users.GetRolesAsync(user);
         return View(new ProfileVM
         {
-            FullName = user.FullName,
-            Email = user.Email ?? string.Empty,
+            FullName    = user.FullName,
+            Email       = user.Email ?? string.Empty,
             PhoneNumber = user.PhoneNumber,
-            Roles = roles.OrderBy(RoleSortOrder).ToList()
+            AvatarUrl   = user.AvatarUrl,
+            Roles       = roles.OrderBy(RoleSortOrder).ToList()
         });
     }
 
@@ -470,4 +476,50 @@ public class AccountController : Controller
         AppRoles.Student => 5,
         _ => 99
     };
+
+    // ── Upload Avatar ─────────────────────────────────────────────────────────
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UploadAvatar(IFormFile? avatar, CancellationToken ct)
+    {
+        var user = await _users.GetUserAsync(User);
+        if (user is null) return Forbid();
+
+        var error = FileValidator.ValidateImage(avatar);
+        if (error is not null)
+        {
+            TempData["Error"] = error;
+            return RedirectToAction(nameof(Profile));
+        }
+
+        await _blob.DeleteAsync(user.AvatarUrl, ct);
+
+        await using var stream = avatar!.OpenReadStream();
+        user.AvatarUrl = await _blob.UploadAsync(
+            stream, avatar.FileName, avatar.ContentType, FileValidator.Avatars, ct);
+
+        await _users.UpdateAsync(user);
+        TempData["Success"] = "Avatar updated successfully.";
+        return RedirectToAction(nameof(Profile));
+    }
+
+    // ── Remove Avatar ─────────────────────────────────────────────────────────
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveAvatar(CancellationToken ct)
+    {
+        var user = await _users.GetUserAsync(User);
+        if (user is null) return Forbid();
+
+        await _blob.DeleteAsync(user.AvatarUrl, ct);
+        user.AvatarUrl = null;
+        await _users.UpdateAsync(user);
+        TempData["Success"] = "Avatar removed.";
+        return RedirectToAction(nameof(Profile));
+    }
+
 }
